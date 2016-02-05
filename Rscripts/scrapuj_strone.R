@@ -1,6 +1,3 @@
-
-
-
 library(rvest)
 library(stringi)
 
