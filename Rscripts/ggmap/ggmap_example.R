@@ -1,5 +1,11 @@
 library(ggmap)
 
+
+
+
+
+
+
 miejsca <- list()
 
 miejsca$pierwszy <- ggmap::geocode("warszawa krasnobrodzka")
