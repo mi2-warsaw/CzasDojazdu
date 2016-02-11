@@ -11,5 +11,9 @@ ulice <- function(ogloszenie){
   wynik <- wynik[!is.na(wynik)]
   wynik <- unique(wynik)
   wynik <- wynik[wynik!="ul"& wynik!='al'] 
+  
+  
+  
+  
   wynik
 }
