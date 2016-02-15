@@ -1,4 +1,3 @@
-# Załadowanie środowiska --------------------------------------------------
 library(rvest)
 library(stringi)
 library(stringr)
@@ -6,6 +5,7 @@ library(RSQLite)
 library(stringdist)
 library(data.table)
 library(pbapply)
+library(dplyr)
 
 source('Rscripts/ulice/adres_z_opisu.R')
 slownik <- data.table::fread('dicts/warszawskie_ulice.txt', 
@@ -22,7 +22,7 @@ aktualne_oferty <- function(link) {
   return(linki)
 }
 scrapuj <- function (x, slownik) {
-
+  
   read_html(x, encoding = "UTF-8") -> web
   
   web %>%
@@ -55,7 +55,7 @@ scrapuj <- function (x, slownik) {
   opis<-gsub("'",'',opis)
   tryCatch({repair_encoding(opis) -> opis}, 
            error = function(e) {return(opis)})
-           
+  
   # adres
   # wyciagniecie odmiany adresu
   ulice(opis) -> poprawny_adres
@@ -63,7 +63,7 @@ scrapuj <- function (x, slownik) {
   if (length(poprawny_adres) > 0) {
     poprawny_adres %>%
       stringdist(slownik) -> odleglosci
-      which.min(odleglosci) -> index_adresu
+    which.min(odleglosci) -> index_adresu
     
     slownik[index_adresu] -> adres
   } else {
@@ -82,14 +82,14 @@ scrapuj <- function (x, slownik) {
     str_replace_all("[\n\t]","") -> data_dodania
   if(length(data_dodania)==0) data_dodania<-""
   data_dodania<-as.Date(data_dodania,format="%d/%m/%Y")
-
+  
   return(list(cena = cena, wielkosc = wielkosc, telefon = telefon, opis = opis, adres = adres,  data_dodania = data_dodania))
 }
 
 if (file.exists("czas_dojazdu.db")==F){
   gumtree_warszawa_pokoje <- data.frame(cena = "", wielkosc = "", telefon = "", opis = "", adres = "", data_dodania="", link="" ,                             
                                         stringsAsFactors = FALSE)
-
+  
   polaczenie <- dbConnect( dbDriver( "SQLite" ), "czas_dojazdu.db" )
   
   dbWriteTable(polaczenie, name = "gumtree_warszawa_pokoje", gumtree_warszawa_pokoje, overwrite = TRUE, row.names = FALSE)  
@@ -99,11 +99,12 @@ polaczenie <- dbConnect( dbDriver( "SQLite" ), "czas_dojazdu.db" )
 
 # Zmienne startowe --------------------------------------------------------
 
-liczba_stron<-5
+liczba_stron<-10
 
 # Scrapowanie -------------------------------------------------------------
 
 linki <- paste('http://www.gumtree.pl/s-pokoje-do-wynajecia/warszawa/v1c9000l3200008p',1:liczba_stron,sep="")
+
 adresy<-c(sapply(linki,aktualne_oferty))
 
 adresydb<- as.vector(as.matrix(dbGetQuery(polaczenie,"select link from gumtree_warszawa_pokoje")))
@@ -112,26 +113,15 @@ adresy<-adresy[!(adresy %in% adresydb)]
 dane<-pblapply(adresy,scrapuj, slownik = slownik)
 
 
-# for( i in 1:length(adresy)){
-#   scrapuj(x = adresy[i], slownik = slownik)
-# }
+# Dane do ramki, czyszczenie ramki i dociągnie danych o dzielnicy ---------
 
-# Wgrywanie danych do DB --------------------------------------------------
-zap<-c()
-for (i in seq_along(dane)){
-  zap[i]<-paste("('",dane[[i]]$cena,"','",dane[[i]]$wielkosc,"','",dane[[i]]$telefon,"','",
-                dane[[i]]$opis,"','", dane[[i]]$adres, "','", dane[[i]]$data_dodania,"','",adresy[i],"')",collapse="",sep="")
-}
+dane.df <- do.call(rbind, lapply(dane, data.frame, stringsAsFactors=FALSE))
 
-insert<-paste0("INSERT INTO gumtree_warszawa_pokoje(cena,wielkosc,telefon,opis,adres,data_dodania,link)
-             VALUES ",paste(zap,collapse=","))
-rm(zap)
+#dodanie informacji o dzielnicy
+obiekty <- read.csv("dicts/wawa_obiekty.csv", stringsAsFactors = FALSE)
+dane.df <- dplyr::left_join(dane.df, obiekty, by = "adres")
 
-dbGetQuery(polaczenie,insert)
+dane.df <- dane.df %>%
+  filter(district != "Wesoła" & adres != "" & adres != "Ewy" & adres != "Picassa")
 
-# mala obczajka jakie sa potencjalnei adresy
-dbGetQuery(polaczenie, "select * from gumtree_warszawa_pokoje") -> adresy_w_bazce
-repair_encoding(adresy_w_bazce$adres, from = "UTF-8")
-
-dbDisconnect(polaczenie)
-
+dane.df <- dane.df[, !names(dane.df) %in% c("name.long", "name.short", "name.gen", "type")] 
