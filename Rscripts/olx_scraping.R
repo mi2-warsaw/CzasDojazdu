@@ -17,6 +17,15 @@ aktualne_oferty <- function(link) {
 scrapuj <- function (x) {
   read_html(x) -> web
   
+  # dzielnica
+  web %>%
+    html_nodes('.c2b') %>% 
+    html_text() %>%
+    str_replace_all("Warszawa, Mazowieckie, " , "") %>% 
+    str_replace_all("[\r\n]" , "") %>% 
+    stri_trim() -> dzielnica
+  
+  # cena
   web %>%
     html_nodes('.not-arranged') %>%
     html_text() %>%
@@ -24,6 +33,7 @@ scrapuj <- function (x) {
   if(length(cena)==0) cena<-""
   cena<-cena[1]
   
+  # telefon
   html_nodes(web, "li.rel") %>%      
     html_attrs() %>%                 
     flatten_chr() %>%                
@@ -47,21 +57,30 @@ scrapuj <- function (x) {
      telefon<-str_replace_all(telefon,"[^0-9 ]","")
      telefon<-as.character(substr(telefon,1,12))
     }
+
+  # opis
   web %>%
     html_nodes('.descriptioncontent div p') %>%
     html_text() %>%
-    str_replace_all("[\r\n]" , "") -> opis
-  if(length(opis)==0) opis<-""
-  #usunięcie apostrof i cudzysłów
-  opis<-gsub("'",'',opis)
-  opis<-gsub("\"",'',opis)
-  
+    str_replace_all("[\r\n]" , "") %>%
+    stri_trim()-> opis
+  if(length(opis)==0) {
+    opis<-""
+  } else {
+    opis<-opis[1]
+    #usunięcie apostrof i cudzysłów
+    opis<-gsub("'",'',opis)
+    opis<-gsub("\"",'',opis)
+    opis<-gsub("\\(|\\)",'',opis)
+  }
+
+  # link do zdjęcia
   web %>%
     html_nodes('.inlblk .bigImage') %>%
     html_attr('src') -> link_do_zdj
   if(length(link_do_zdj)==0) link_do_zdj<-""
   
-  
+  # data dodania ogłoszenia
   web %>%
     html_nodes(".brlefte5") %>%
     html_text() %>%
@@ -87,11 +106,11 @@ scrapuj <- function (x) {
   data_dodania<-as.Date(data_dodania,format=" %d %B %Y")
   
   
-  return(list(cena = cena, telefon = telefon, opis = opis, link_do_zdj=link_do_zdj, data_dodania = data_dodania))
+  return(list(cena = cena, telefon = telefon, opis = opis, link_do_zdj=link_do_zdj, dzielnica=dzielnica, data_dodania = data_dodania))
 }
 
 if (file.exists("czas_dojazdu.db")==F){
-  olx_warszawa_pokoje <- data.frame(cena = "", telefon = "", opis = "", link_do_zdj="",
+  olx_warszawa_pokoje <- data.frame(cena = "", telefon = "", opis = "", link_do_zdj="", dzielnica="", 
                                     data_dodania="", link="" ,  stringsAsFactors = FALSE)
   
   polaczenie <- dbConnect( dbDriver( "SQLite" ), "czas_dojazdu.db" )
@@ -122,11 +141,12 @@ dane<-lapply(adresy,scrapuj)
 # Wgrywanie danych do DB --------------------------------------------------
 zap<-c()
 for (i in seq_along(dane)){
-  zap[i]<-paste("('",dane[[i]]$cena,"','",dane[[i]]$telefon,"','",dane[[i]]$opis,"','",
-                dane[[i]]$link_do_zdj,"','",dane[[i]]$data_dodania,"','",adresy[i],"')",collapse="",sep="")
+  zap[i]<-paste("('",dane[[i]]$cena,"','",dane[[i]]$telefon,"','",dane[[i]]$opis,"','",dane[[i]]$link_do_zdj,"','",
+                dane[[i]]$dzielnica,"','",dane[[i]]$data_dodania,"','",adresy[i],"')",collapse="",sep="")
 }
 
-insert<-paste0("INSERT INTO olx_warszawa_pokoje(cena,telefon,opis,link_do_zdj,data_dodania,link)
+
+insert<-paste0("INSERT INTO olx_warszawa_pokoje(cena,telefon,opis,link_do_zdj,dzielnica,data_dodania,link)
              VALUES ",paste(zap,collapse=","))
 rm(zap)
 
@@ -134,6 +154,6 @@ dbGetQuery(polaczenie,insert)
 
 df<-dbGetQuery(polaczenie,"select * from olx_warszawa_pokoje")
 
-
+dbDisconnect(polaczenie)
 
 
