@@ -4,7 +4,7 @@ library(maptools)
 library(ggplot2)
 
 # wczytujemy listę kodów TERYT
-teryt <- read.csv("dicts/TERYT.csv", stringsAsFactors = FALSE, colClasses = "character")
+teryt <- read.csv("dicts/TERYT.csv", colClasses = "character")
 
 # filtrujemy dzielnice Warszawy z zestawienia TERYT (oprócz samej Warszawy) - pierwsze 4 znaki kodu
 terytWa <- teryt %>%
