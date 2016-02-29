@@ -6,6 +6,14 @@ library(RSQLite)
 library(RSelenium)
 library(httr)
 library(purrr)
+library(pbapply)
+library(ggmap)
+library(stringdist)
+
+source('Rscripts/ulice/adres_z_opisu.R')
+slownik <- data.table::fread('dicts/warszawskie_ulice.txt', 
+                             encoding = "UTF-8", data.table = FALSE) %>% unlist
+names(slownik) <- NULL
 
 aktualne_oferty <- function(link) {
   linki<-read_html(link) %>%
@@ -14,7 +22,7 @@ aktualne_oferty <- function(link) {
   return(linki)
 }
 
-scrapuj <- function (x) {
+scrapuj <- function (x, slownik, miasto = "Warszawa") {
   read_html(x) -> web
   
   # dzielnica
@@ -33,31 +41,31 @@ scrapuj <- function (x) {
   if(length(cena)==0) cena<-""
   cena<-cena[1]
   
-  # telefon
-  html_nodes(web, "li.rel") %>%      
-    html_attrs() %>%                 
-    flatten_chr() %>%                
-    keep(~grepl("rel \\{", .x)) %>%  
-    str_extract("(\\{.*\\})") %>%    
-    unique() %>%                     
-    map_df(function(x) {
-      
-      path <- str_match(x, "'path':'([[:alnum:]]+)'")[,2]                  
-      id <- str_match(x, "'id':'([[:alnum:]]+)'")[,2]                      
-      
-      ajax <- sprintf("http://olx.pl/ajax/misc/contact/%s/%s/", path, id)  
-      value <- content(GET(ajax))$value                                    
-      
-      data.frame(path=path, id=id, value=value, stringsAsFactors=FALSE)    
-      
-    }) -> telefon 
-  if(length(telefon)==0) { 
-    telefon<-"" } else {
-     telefon<-as.character(telefon[which(telefon[,1]=="phone"),3])
-     telefon<-str_replace_all(telefon,"[^0-9 ]","")
-     telefon<-as.character(substr(telefon,1,12))
-    }
-
+#   # telefon
+#   html_nodes(web, "li.rel") %>%      
+#     html_attrs() %>%                 
+#     flatten_chr() %>%                
+#     keep(~grepl("rel \\{", .x)) %>%  
+#     str_extract("(\\{.*\\})") %>%    
+#     unique() %>%                     
+#     map_df(function(x) {
+#       
+#       path <- str_match(x, "'path':'([[:alnum:]]+)'")[,2]                  
+#       id <- str_match(x, "'id':'([[:alnum:]]+)'")[,2]                      
+#       
+#       ajax <- sprintf("http://olx.pl/ajax/misc/contact/%s/%s/", path, id)  
+#       value <- content(GET(ajax))$value                                    
+#       
+#       data.frame(path=path, id=id, value=value, stringsAsFactors=FALSE)    
+#       
+#     }) -> telefon 
+#   if(length(telefon)==0) { 
+#     telefon<-"" } else {
+#       telefon<-as.character(telefon[which(telefon[,1]=="phone"),3])
+#       telefon<-str_replace_all(telefon,"[^0-9 ]","")
+#       telefon<-as.character(substr(telefon,1,12))
+#     }
+  
   # opis
   web %>%
     html_nodes('.descriptioncontent div p') %>%
@@ -73,6 +81,39 @@ scrapuj <- function (x) {
     opis<-gsub("\"",'',opis)
     opis<-gsub("\\(|\\)",'',opis)
   }
+  
+
+  # adres
+  ulice(opis) -> poprawny_adres
+  
+  if (sum(grepl("1|2|3|4|5|6|7|8|9|0", poprawny_adres)) > 0) {
+    poprawny_adres[grepl("1|2|3|4|5|6|7|8|9|0", poprawny_adres)] -> poprawny_adres
+  }
+  # z odmainy adresu zrobienie poprawnej nazwy ulicy
+  if (length(poprawny_adres) > 0) {
+    if (length(strsplit(poprawny_adres, " ")[[1]]) > 1) {
+      numer_bloku <- tail(strsplit(poprawny_adres, " ")[[1]],1)
+      grep("1|2|3|4|5|6|7|8|9|0", numer_bloku, value = TRUE) -> numer_bloku
+    } else{
+      numer_bloku <- ""
+    }
+    poprawny_adres %>%
+      stringdist(slownik) -> odleglosci
+    which.min(odleglosci) -> index_adresu
+    
+    paste0(slownik[index_adresu], " ", numer_bloku) -> adres
+  } else {
+    adres <- ""
+  }
+  
+  
+  # content
+  content <- paste(sep = "<br/>",
+                   paste0('<b><a href="',x,'">',adres,"</a></b>"),
+                   paste0("Cena: ", cena))
+  
+  # wspolrzedne
+  ggmap::geocode(paste(adres, miasto)) -> wspolrzedne
 
   # link do zdjęcia
   web %>%
@@ -106,11 +147,17 @@ scrapuj <- function (x) {
   data_dodania<-as.Date(data_dodania,format=" %d %B %Y")
   
   
-  return(list(cena = cena, telefon = telefon, opis = opis, link_do_zdj=link_do_zdj, dzielnica=dzielnica, data_dodania = data_dodania))
+  return(list(cena = cena, #telefon = telefon, 
+              opis = opis, adres=adres, link=x,
+              content=content, lon=wspolrzedne$lon, lat=wspolrzedne$lat,
+              link_do_zdj=link_do_zdj, dzielnica=dzielnica, 
+              data_dodania = data_dodania))
 }
 
 if (file.exists("czas_dojazdu.db")==F){
-  olx_warszawa_pokoje <- data.frame(cena = "", telefon = "", opis = "", link_do_zdj="", dzielnica="", 
+  olx_warszawa_pokoje <- data.frame(cena = "", #telefon = "", 
+                                    opis = "",adres="", link="", content="",lon="",lat="",
+                                    link_do_zdj="", dzielnica="", 
                                     data_dodania="", link="" ,  stringsAsFactors = FALSE)
   
   polaczenie <- dbConnect( dbDriver( "SQLite" ), "czas_dojazdu.db" )
@@ -141,13 +188,17 @@ dane<-lapply(adresy,scrapuj)
 # Wgrywanie danych do DB --------------------------------------------------
 zap<-c()
 for (i in seq_along(dane)){
-  zap[i]<-paste("('",dane[[i]]$cena,"','",dane[[i]]$telefon,"','",dane[[i]]$opis,"','",dane[[i]]$link_do_zdj,"','",
-                dane[[i]]$dzielnica,"','",dane[[i]]$data_dodania,"','",adresy[i],"')",collapse="",sep="")
+  zap[i]<-paste("('",dane[[i]]$cena,"','",#dane[[i]]$telefon,"','",
+                dane[[i]]$opis,"','",
+                dane[[i]]$adres,"','",dane[[i]]$link,"','",dane[[i]]$content,"','",dane[[i]]$lon,"','",
+                dane[[i]]$lat,"','",dane[[i]]$link_do_zdj,"','",dane[[i]]$dzielnica,"','",
+                dane[[i]]$data_dodania,"','",adresy[i],"')",collapse="",sep="")
 }
 
 
-insert<-paste0("INSERT INTO olx_warszawa_pokoje(cena,telefon,opis,link_do_zdj,dzielnica,data_dodania,link)
-             VALUES ",paste(zap,collapse=","))
+insert<-paste0("INSERT INTO olx_warszawa_pokoje(cena,opis,
+                  adres,link,content,lon,lat,link_do_zdj,dzielnica,data_dodania,link)
+               VALUES ",paste(zap,collapse=","))
 rm(zap)
 
 dbGetQuery(polaczenie,insert)
@@ -155,5 +206,3 @@ dbGetQuery(polaczenie,insert)
 df<-dbGetQuery(polaczenie,"select * from olx_warszawa_pokoje")
 
 dbDisconnect(polaczenie)
-
-
