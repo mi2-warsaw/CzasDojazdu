@@ -62,29 +62,36 @@ scrapuj <- function (x, slownik, miasto = "Warszawa") {
            error = function(e) {return(opis)})
   
   # adres
-  # wyciagniecie odmiany adresu
-  ulice(opis) -> poprawny_adres
+  web %>%
+    html_nodes('.address') %>%
+    html_text()-> adres
   
-  if (sum(grepl("1|2|3|4|5|6|7|8|9|0", poprawny_adres)) > 0) {
-    poprawny_adres[grepl("1|2|3|4|5|6|7|8|9|0", poprawny_adres)] -> poprawny_adres
-  }
-  # z odmainy adresu zrobienie poprawnej nazwy ulicy
-  if (length(poprawny_adres) > 0) {
-    if (length(strsplit(poprawny_adres, " ")[[1]]) > 1) {
-      numer_bloku <- tail(strsplit(poprawny_adres, " ")[[1]],1)
-      grep("1|2|3|4|5|6|7|8|9|0", numer_bloku, value = TRUE) -> numer_bloku
-    } else{
-      numer_bloku <- ""
-    }
-    poprawny_adres %>%
-      stringdist(slownik) -> odleglosci
-    which.min(odleglosci) -> index_adresu
-    
-    paste0(slownik[index_adresu], " ", numer_bloku) -> adres
-  } else {
-    adres <- ""
-  }
+  if(length(adres)==0){
   
+      ulice(opis) -> poprawny_adres
+      
+      if (sum(grepl("1|2|3|4|5|6|7|8|9|0", poprawny_adres)) > 0) {
+        poprawny_adres[grepl("1|2|3|4|5|6|7|8|9|0", poprawny_adres)] -> poprawny_adres
+      }
+      # z odmainy adresu zrobienie poprawnej nazwy ulicy
+      
+      if (length(poprawny_adres) > 0) {
+        if (length(strsplit(poprawny_adres, " ")[[1]]) > 1) {
+          numer_bloku <- tail(strsplit(poprawny_adres, " ")[[1]],1)
+          grep("1|2|3|4|5|6|7|8|9|0", numer_bloku, value = TRUE) -> numer_bloku
+        } else{
+          numer_bloku <- ""
+        }
+        poprawny_adres %>%
+          stringdist(slownik) -> odleglosci
+        which.min(odleglosci) -> index_adresu
+        
+        paste0(slownik[index_adresu], " ", numer_bloku) -> adres
+      } else {
+        adres <- ""
+      }
+  }
+
   # linki do zdjec
   web %>%
     html_nodes('.main img') %>%
