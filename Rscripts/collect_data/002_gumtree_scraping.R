@@ -171,7 +171,6 @@ for (i in seq_along(dane)){
 }
 
 insert<-paste0("INSERT INTO gumtree_warszawa_pokoje (cena,wielkosc,opis,link_do_zdj,adres,dzielnica,data_dodania,link, content, lon, lat) VALUES ",paste(zap,collapse=","))
-rm(zap)
 
 dbGetQuery(polaczenie,insert)
 

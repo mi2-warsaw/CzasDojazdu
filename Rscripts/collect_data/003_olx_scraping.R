@@ -191,7 +191,6 @@ for (i in seq_along(dane)){
 insert<-paste0("INSERT INTO olx_warszawa_pokoje(cena,opis,
                   adres,link,content,lon,lat,link_do_zdj,dzielnica,data_dodania)
                VALUES ",paste(zap,collapse=","))
-rm(zap)
 
 dbGetQuery(polaczenie,insert)
 
