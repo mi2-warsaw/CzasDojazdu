@@ -1,14 +1,5 @@
-# Załadowanie środowiska --------------------------------------------------
-library(rvest)
-library(stringi)
-library(stringr)
-library(RSQLite)
-library(stringdist)
-library(data.table)
-library(pbapply)
-library(ggmap)
 
-source('Rscripts/ulice/adres_z_opisu.R')
+source('Rscripts/inne/ulice/adres_z_opisu.R')
 slownik <- data.table::fread('dicts/warszawskie_ulice.txt', 
                              encoding = "UTF-8", data.table = FALSE) %>% unlist
 names(slownik) <- NULL
@@ -127,19 +118,29 @@ scrapuj <- function (x, slownik, miasto = "Warszawa") {
               link=x, content = content, lon = wspolrzedne$lon, lat = wspolrzedne$lat))
 }
 
-if (file.exists("czas_dojazdu.db")==F){
+
+tworz_gumtree_pokoje <- function(polaczenie) {
   gumtree_warszawa_pokoje <- data.frame(cena = "", wielkosc = "", #telefon = "", 
                                         opis = "", link_do_zdj = "" , adres = "",
                                         dzielnica = "", data_dodania="", link="" ,
                                         content = "", lon = "", lat = "",
                                         stringsAsFactors = FALSE)
+  # 
+  # polaczenie <- dbConnect( dbDriver( "SQLite" ), "dane/czas_dojazdu.db" )
   
-  polaczenie <- dbConnect( dbDriver( "SQLite" ), "czas_dojazdu.db" )
-  
-  dbWriteTable(polaczenie, name = "gumtree_warszawa_pokoje", gumtree_warszawa_pokoje, overwrite = TRUE, row.names = FALSE)  
+  dbWriteTable(polaczenie, name = "gumtree_warszawa_pokoje",
+               gumtree_warszawa_pokoje, overwrite = TRUE, row.names = FALSE)  
 }
 
-polaczenie <- dbConnect( dbDriver( "SQLite" ), "czas_dojazdu.db" )
+# 
+# if (!file.exists("dane/czas_dojazdu.db")){
+#   tworz_gumtree_pokoje()
+# }
+
+polaczenie <- dbConnect( dbDriver( "SQLite" ), "dane/czas_dojazdu.db" )
+if (!("gumtree_warszawa_pokoje" %in% dbListTables(polaczenie))){
+  tworz_gumtree_pokoje(polaczenie)
+}
 
 # Zmienne startowe --------------------------------------------------------
 
@@ -175,7 +176,7 @@ rm(zap)
 dbGetQuery(polaczenie,insert)
 
 # mala obczajka jakie sa potencjalnei adresy
-dbGetQuery(polaczenie, "select * from gumtree_warszawa_pokoje") -> adresy_w_bazce
-repair_encoding(adresy_w_bazce$adres, from = "UTF-8")
+# dbGetQuery(polaczenie, "select * from gumtree_warszawa_pokoje") -> adresy_w_bazce
+# repair_encoding(adresy_w_bazce$adres, from = "UTF-8")
 
 dbDisconnect(polaczenie)

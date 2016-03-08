@@ -1,16 +1,5 @@
-# Załadowanie środowiska --------------------------------------------------
-library(rvest)
-library(stringi)
-library(stringr)
-library(RSQLite)
-library(RSelenium)
-library(httr)
-library(purrr)
-library(pbapply)
-library(ggmap)
-library(stringdist)
 
-source('Rscripts/ulice/adres_z_opisu.R')
+source('Rscripts/inne/ulice/adres_z_opisu.R')
 slownik <- data.table::fread('dicts/warszawskie_ulice.txt', 
                              encoding = "UTF-8", data.table = FALSE) %>% unlist
 names(slownik) <- NULL
@@ -154,19 +143,22 @@ scrapuj <- function (x, slownik, miasto = "Warszawa") {
               data_dodania = data_dodania))
 }
 
-if (file.exists("czas_dojazdu.db")==F){
+tworz_olx_pokoje <- function(polaczenie){
   olx_warszawa_pokoje <- data.frame(cena = "", #telefon = "", 
                                     opis = "",adres="", link="", content="",lon="",lat="",
                                     link_do_zdj="", dzielnica="", 
                                     data_dodania="", link="" ,  stringsAsFactors = FALSE)
   
-  polaczenie <- dbConnect( dbDriver( "SQLite" ), "czas_dojazdu.db" )
+  #polaczenie <- dbConnect( dbDriver( "SQLite" ), "dane/czas_dojazdu.db" )
   
-  dbWriteTable(polaczenie, name = "olx_warszawa_pokoje", olx_warszawa_pokoje, overwrite = TRUE, row.names = FALSE)  
+  dbWriteTable(polaczenie, name = "olx_warszawa_pokoje",
+               olx_warszawa_pokoje, overwrite = TRUE, row.names = FALSE)  
 }
 
-polaczenie <- dbConnect( dbDriver( "SQLite" ), "czas_dojazdu.db" )
-
+polaczenie <- dbConnect( dbDriver( "SQLite" ), "dane/czas_dojazdu.db" )
+if (!("olx_warszawa_pokoje" %in% dbListTables(polaczenie))){
+  tworz_olx_pokoje(polaczenie)
+}
 
 # Zmienne startowe --------------------------------------------------------
 
@@ -176,13 +168,13 @@ liczba_stron<-2
 
 linki <- paste("http://olx.pl/nieruchomosci/stancje-pokoje/warszawa/?page=",1:liczba_stron,sep="")
 adresy<-sapply(linki,aktualne_oferty)
-adresy<-flatten_chr(adresy)
-
+adresy<-unlist(adresy)
+names(adresy) <- NULL
 
 adresydb<- as.vector(as.matrix(dbGetQuery(polaczenie,"select link from olx_warszawa_pokoje")))
 adresy<-adresy[!(adresy %in% adresydb)]
 
-dane<-lapply(adresy,scrapuj)
+dane<-lapply(adresy,scrapuj, slownik = slownik)
 
 
 # Wgrywanie danych do DB --------------------------------------------------
@@ -192,17 +184,17 @@ for (i in seq_along(dane)){
                 dane[[i]]$opis,"','",
                 dane[[i]]$adres,"','",dane[[i]]$link,"','",dane[[i]]$content,"','",dane[[i]]$lon,"','",
                 dane[[i]]$lat,"','",dane[[i]]$link_do_zdj,"','",dane[[i]]$dzielnica,"','",
-                dane[[i]]$data_dodania,"','",adresy[i],"')",collapse="",sep="")
+                dane[[i]]$data_dodania,"')",collapse="",sep="")
 }
 
 
 insert<-paste0("INSERT INTO olx_warszawa_pokoje(cena,opis,
-                  adres,link,content,lon,lat,link_do_zdj,dzielnica,data_dodania,link)
+                  adres,link,content,lon,lat,link_do_zdj,dzielnica,data_dodania)
                VALUES ",paste(zap,collapse=","))
 rm(zap)
 
 dbGetQuery(polaczenie,insert)
 
-df<-dbGetQuery(polaczenie,"select * from olx_warszawa_pokoje")
+#df<-dbGetQuery(polaczenie,"select * from olx_warszawa_pokoje")
 
 dbDisconnect(polaczenie)
