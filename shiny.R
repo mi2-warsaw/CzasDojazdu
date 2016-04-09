@@ -5,8 +5,34 @@ library(DT)
 library(dplyr)
 library(ggmap)
 library(stringi)
+library(RSQLite)
 
-dane.df <- read.csv("dane.csv")
+ 
+ conn <- dbConnect( dbDriver( "SQLite" ), "czas_dojazdu.db" )
+dane <- list()
+ dbGetQuery(conn, 'select cena, adres, dzielnica,  content, lon, lat, data_dodania
+            from gumtree_warszawa_pokoje 
+            where cena <> "" and adres <> "" and dzielnica <> "" 
+            and content <> "" and lon <> "" and lat <> "" and data_dodania <> "" ') -> dane[[1]]
+ 
+ dbGetQuery(conn, 'select cena, adres, dzielnica,  content, lon, lat, data_dodania
+            from olx_warszawa_pokoje 
+            where cena <> "" and adres <> "" and dzielnica <> "" 
+            and content <> "" and lon <> "" and lat <> "" and data_dodania <> "" ') -> dane[[2]]
+ 
+ dane <- do.call("rbind", dane)
+
+#  content <- dane[[1]]$content
+#  content <- content[1:6]
+#  cena <- c(800, 1000, 900, 850, 1000, 750)
+# data_dodania <- c("2016-04-08","2016-04-08", "2016-04-10", "2016-04-06", "2016-04-06", "2016-04-07")
+#  adres <- c("Abrahama 10", "Koszykowa 3", "Anielewicza" , "Banacha 2", "Saska 10", "Racławicka 11")
+#  dzielnica <- c("Praga", "Srodmiescie", "WOla", "Ochota", "Praga", "Mokotów")
+#  geo <- ggmap::geocode(paste("Warszawa", adres))
+#  lon <- geo$lon
+#  lat <- geo$lat
+#  dane <- data.frame(cena, adres, dzielnica, geo, lon, lat, content, data_dodania)
+#  dane
 
 
 ui <- navbarPage(theme = "bootstrap.min4.css", 
@@ -29,27 +55,27 @@ ui <- navbarPage(theme = "bootstrap.min4.css",
                           sidebarLayout(
                             sidebarPanel(
                               
-                              selectInput("miasto", "Wybierz miasto",
-                                          as.character(unique(dane.df$miasto))),
+                              checkboxGroupInput("dzielnica", "Wybierz dzielnicę: ", 
+                              choices = as.character(sort(unique(dane$dzielnica)))),
                               
-                              uiOutput("ui"),
-                              textInput("lokalizacja", "Lokalizacja: ", 
-                                        value = "Warszawa, Koszykowa 75"),
+                              textInput("lokalizacja", "Lokalizacja docelowa: ", 
+                                        value = "Koszykowa 75"),
                               
-                              sliderInput("czas_doj", "Maksymalny czas dojazdu w min. :",
+                              sliderInput("czas_doj", "Maksymalny czas dojazdu w minutach :",
                                           min = 0, max = 120, value= 30),
                               
-                              selectInput("srodek_trans", "Srodek transportu: ", 
+                              selectInput("srodek_trans", "Wybierz środek transportu: ", 
                                           choices = c("Samochod" , "Rower" , "Pieszo"), selected = "Samochod"),
                               
-                              sliderInput("cena", "Zakres cenowy :", min = 0, max = 4000,
+                              sliderInput("cena", "Wybierz zakres cenowy :", min = 0, max = 4000,
                                           value=c(800,1500)),
+                            
+                              sliderInput("data", "Wybierz datę ogłoszenia (ilość ostatnich dni)",
+                                          min = 0, max = 7, value= 3),
                               
-                              selectInput("rodzaj_lok", "Rodzaj lokalu: ", 
-                                          choices = as.character(unique(dane.df$rodzaj)), selected = "Pokoj")
-                              
-                              
+                              actionButton("go", "Pokaż lokalizacje")
                             ),
+                            
                             mainPanel(
                               leafletOutput("mymap" , height = 800)
                             )
@@ -64,81 +90,74 @@ ui <- navbarPage(theme = "bootstrap.min4.css",
 
 
 server <- function(input, output, session) {
-  
-  output$ui <- renderUI({
-    if (is.null(input$miasto))
-      return()
     
-    switch(input$miasto,
-           "Warszawa" = checkboxGroupInput("dzielnica", "Dzielnica: ", 
-                                           choices = as.character(sort(unique(stri_trim(subset(dane.df, dane.df$miasto =="Warszawa")$district)))),
-                                           selected = as.character(sort(unique(subset(dane.df, dane.df$miasto =="Warszawa")$district)))[1]),
-           "Wroclaw" = checkboxGroupInput("dzielnica", "Dzielnica: ", 
-                                          choices = as.character(sort(unique(subset(dane.df, dane.df$miasto =="Wroclaw")$district))))
-    )
+  v <- reactiveValues(doPlot = FALSE)
+  
+  observeEvent(input$go, {
+    v$doPlot <- input$go
+  })
+
+  dane2  <- reactive({
+    dane <- dane %>% filter( as.character(dzielnica) %in% unlist(input$dzielnica),
+                            as.numeric(cena) >= input$cena[1] & as.numeric(cena) <= input$cena[2],
+                            as.Date(data_dodania)>=(Sys.Date() - input$data) ) 
+    dane
   })
   
   
-  dane.df2  <- reactive({
-    dane.df <- dane.df %>% filter(miasto == input$miasto,
-                                  as.character(district) %in% unlist(input$dzielnica),
-                                  cena >= input$cena[1] & cena <= input$cena[2], 
-                                  rodzaj == input$rodzaj_lok)
-    dane.df
-  })
-  
-  
-  dane.df3 <-  reactive({
+  dane3 <-  reactive({
     
     if (input$srodek_trans =="Samochod") typ = "driving"
     if (input$srodek_trans =="Rower") typ = "bicycling"
     if (input$srodek_trans =="Pieszo") typ = "walking"
-    czas <- mapdist(from = paste(dane.df2()$miasto, dane.df2()$adres), 
-                    to = input$lokalizacja, 
+    czas <- mapdist(from = paste("Warszawa", dane2()$adres), 
+                    to = paste("Warszawa", input$lokalizacja), 
                     mode = typ,
                     output = "simple")
     czas <- as.integer(czas$minutes)
-    dane.df <- cbind(dane.df2(), czas)
-    dane.df <- dane.df %>% filter(czas <= input$czas_doj)
-    dane.df
+    dane <- cbind(dane2(), czas)
+    dane<- dane %>% filter(czas <= input$czas_doj)
+    dane
   })
   
   
   output$content <- DT::renderDataTable(
-    
-    DT::datatable(dane.df3()[, c("miasto", "district", "adres", "cena","rodzaj", "czas")])
-    
+    if (v$doPlot == FALSE) { 
+      DT::datatable(data.frame(dzielnica = "", adres = "", cena="", czas="", data_dodania = ""))
+    } else {
+    DT::datatable(dane3()[, c("dzielnica", "adres", "cena", "czas", "data_dodania")])
+    }
   )
   
   
   output$mymap <- renderLeaflet({
     
-    geocode <- geocode(input$lokalizacja)
-    
     content_lok <- paste( sep = "<br/>", 
                           "Twoja lokalizacja", 
-                          input$lokalizacja)
-    
-    
-    content <- paste( sep = "<br/>",
-                      paste0("<b><a href='",dane.df3()$link,"'>link</a></b>"),
-                      paste("Cena: ", dane.df3()$cena),
-                      paste("Adres: ", dane.df3()$adres)
-    )
-    
+                          input$lokalizacja)    
+    geocode <- geocode(paste("Warszawa", input$lokalizacja))
     
     blue = "blue.png"
     green = "green.png"
     
+    if (v$doPlot == FALSE) { 
+      leaflet()%>%
+      addTiles() %>% addMarkers(geocode$lon, geocode$lat, icon = list(
+                                 iconUrl = green, iconSize = 40), popup = content_lok
+                               )
+    } else {
+    
+    
+    
     leaflet() %>%
       addTiles() %>%
-      addMarkers(dane.df3()$lon, dane.df3()$lat, icon = list(
+      addMarkers(dane3()$lon, dane3()$lat, icon = list(
         iconUrl = blue, iconSize = 40
-      ), popup = content) %>%
+      ), popup = dane3()$content) %>%
       addMarkers(geocode$lon, geocode$lat, icon = list(
         iconUrl = green, iconSize = 40), popup = content_lok
       )
-    
+    }
     
   })
   
