@@ -6,10 +6,11 @@
 ## Dane
 
 Pobierane są co 30 minut dzięki uruchomieniu skryptu `000_runme.R` .
+Dane udostępniane są pod adresem [http://mi2.mini.pw.edu.pl:8080/CzasDojazdu/dane/](http://mi2.mini.pw.edu.pl:8080/CzasDojazdu/dane/)
 
 ## Aplikacja
 
-Dostępna jest w folderze  `App/` w pliku `app.R`. Dostępna jest pod adresem [https://mi2.mini.pw.edu.pl:8080/CzasDojazdu/App/](https://mi2.mini.pw.edu.pl:8080/CzasDojazdu/App/)
+Kody dostępne są w folderze  `App/`. Aplikacja jest udostępniana pod adresem [https://mi2.mini.pw.edu.pl:8080/CzasDojazdu/App/](https://mi2.mini.pw.edu.pl:8080/CzasDojazdu/App/)
 
 
 ### Autorzy
