@@ -22,6 +22,8 @@ dane <- list()
             and content <> "" and lon <> "" and lat <> "" and data_dodania <> "" ') -> dane[[2]]
  
  dane <- do.call("rbind", dane)
+ 
+ dbDisconnect(conn)
 
 #  content <- dane[[1]]$content
 #  content <- content[1:6]
@@ -35,58 +37,87 @@ dane <- list()
 #  dane <- data.frame(cena, adres, dzielnica, geo, lon, lat, content, data_dodania)
 #  dane
 
+source('elements/dashboardHeader.R')
+source('elements/dashboardSidebar.R')
+ 
+ui <- dashboardPage(
+  skin = "black",
+  dashboardHeader,
+  dashboardSidebar,
+  dashboardBody(
+    tabItems(
+      tabItem(
+        "pokoje",
+        leafletOutput("mymap" , height = 800)
+      ),
+      tabItem(
+        "cel",
+        div(
+            HTML('<p style="font-size:32px; font-family:Verdana;"align="justify"><h2> O projekcie Czas Dojazdu</h2></p>'),
+            HTML('<p style="font-size:24px; font-family:Verdana;"align="justify">&nbsp;&nbsp;&nbsp;&nbsp;Aplikacja Czas Dojazdu umożliwia wyszukanie pokoi do wynajęcia, których czas dojazdu nie przekracza danych parametrów od wybranego miejsca. </p>'),
+            style = 'max-width:1000px;width:98%;margin:auto;')
+      ),
+      tabItem(
+        "dane",
+        DT::dataTableOutput('content') 
+      )
 
-ui <- navbarPage(theme = "bootstrap.min4.css", 
-                 
-                 titlePanel(HTML('<p style="font-size:32px; font-family:Verdana;"align="justify"><h2> Czas dojazdu </h2></p>') , windowTitle = "Czas dojazdu"),
-                 
-                 
-                 tabPanel(tags$h3(tags$b("O projekcie")),
-                          
-                          div(
-                            HTML('<p style="font-size:32px; font-family:Verdana;"align="justify"><h2> O projekcie Czas dojazdu</h2></p>'),
-                            HTML('<p style="font-size:24px; font-family:Verdana;"align="justify">&nbsp;&nbsp;&nbsp;&nbsp;Aplikacja Czas dojazdu jest super. Dziala swietnie, nie ma lepszej. Polecam. </p>'),
-                            style = 'max-width:1000px;width:98%;margin:auto;')),       
-                 
-                 
-                 
-                 
-                 
-                 tabPanel(tags$h3(tags$b("Lokalizacje")),
-                          sidebarLayout(
-                            sidebarPanel(
-                              
-                              checkboxGroupInput("dzielnica", "Wybierz dzielnicę: ", 
-                              choices = as.character(sort(unique(dane$dzielnica)))),
-                              
-                              textInput("lokalizacja", "Lokalizacja docelowa: ", 
-                                        value = "Koszykowa 75"),
-                              
-                              sliderInput("czas_doj", "Maksymalny czas dojazdu w minutach :",
-                                          min = 0, max = 120, value= 30),
-                              
-                              selectInput("srodek_trans", "Wybierz środek transportu: ", 
-                                          choices = c("Samochod" , "Rower" , "Pieszo"), selected = "Samochod"),
-                              
-                              sliderInput("cena", "Wybierz zakres cenowy :", min = 0, max = 4000,
-                                          value=c(800,1500)),
-                            
-                              sliderInput("data", "Wybierz datę ogłoszenia (liczba ostatnich dni)",
-                                          min = 0, max = 7, value= 3),
-                              
-                              actionButton("go", "Pokaż lokalizacje")
-                            ),
-                            
-                            mainPanel(
-                              leafletOutput("mymap" , height = 800)
-                            )
-                          )
-                 ),
-                 
-                 tabPanel(tags$h3(tags$b("Szczegolowe informacje")),
-                          DT::dataTableOutput('content')                         
-                          
-                 ))
+    )
+  )
+) 
+ 
+ 
+# ui <- navbarPage(theme = "bootstrap.min4.css", 
+#                   
+#  titlePanel(HTML('<p style="font-size:32px; font-family:Verdana;"align="justify"><h2> Czas dojazdu </h2></p>') , windowTitle = "Czas dojazdu"),
+#  
+#  
+#  tabPanel(tags$h3(tags$b("O projekcie")),
+#           
+#           div(
+#             HTML('<p style="font-size:32px; font-family:Verdana;"align="justify"><h2> O projekcie Czas dojazdu</h2></p>'),
+#             HTML('<p style="font-size:24px; font-family:Verdana;"align="justify">&nbsp;&nbsp;&nbsp;&nbsp;Aplikacja Czas dojazdu jest super. Dziala swietnie, nie ma lepszej. Polecam. </p>'),
+#             style = 'max-width:1000px;width:98%;margin:auto;')),       
+#  
+#  
+#  
+#  
+#  
+#  tabPanel(tags$h3(tags$b("Lokalizacje")),
+#           sidebarLayout(
+#             sidebarPanel(
+#               
+#               checkboxGroupInput("dzielnica", "Wybierz dzielnicę: ", 
+#               choices = as.character(sort(unique(dane$dzielnica)))),
+#               
+#               textInput("lokalizacja", "Lokalizacja docelowa: ", 
+#                         value = "Koszykowa 75"),
+#               
+#               sliderInput("czas_doj", "Maksymalny czas dojazdu w minutach :",
+#                           min = 0, max = 120, value= 30),
+#               
+#               selectInput("srodek_trans", "Wybierz środek transportu: ", 
+#                           choices = c("Samochod" , "Rower" , "Pieszo"), selected = "Samochod"),
+#               
+#               sliderInput("cena", "Wybierz zakres cenowy :", min = 0, max = 4000,
+#                           value=c(800,1500)),
+#             
+#               sliderInput("data", "Wybierz datę ogłoszenia (liczba ostatnich dni)",
+#                           min = 0, max = 7, value= 3),
+#               
+#               actionButton("go", "Pokaż lokalizacje")
+#             ),
+#             
+#             mainPanel(
+#               leafletOutput("mymap" , height = 800)
+#             )
+#           )
+#  ),
+#  
+#  tabPanel(tags$h3(tags$b("Szczegolowe informacje")),
+#           DT::dataTableOutput('content')                         
+#           
+#  ))
 
 
 
