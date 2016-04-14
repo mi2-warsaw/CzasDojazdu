@@ -1,3 +1,20 @@
+conn <- dbConnect( dbDriver( "SQLite" ), "../dane/czas_dojazdu.db" )
+dane <- list()
+dbGetQuery(conn, 'select cena, adres, dzielnica,  content, lon, lat, data_dodania
+            from gumtree_warszawa_pokoje 
+            where cena <> "" and adres <> "" and dzielnica <> "" 
+            and content <> "" and lon <> "" and lat <> "" and data_dodania <> "" ') -> dane[[1]]
+ 
+dbGetQuery(conn, 'select cena, adres, dzielnica,  content, lon, lat, data_dodania
+            from olx_warszawa_pokoje 
+            where cena <> "" and adres <> "" and dzielnica <> "" 
+            and content <> "" and lon <> "" and lat <> "" and data_dodania <> "" ') -> dane[[2]]
+ 
+dane <- do.call("rbind", dane)
+dbDisconnect(conn)
+
+
+
 dashboardSidebar <-
   dashboardSidebar(
     sidebarMenu(
