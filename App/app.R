@@ -55,22 +55,22 @@ ui <- dashboardPage(
         div(
             HTML('<p style="font-size:32px; font-family:Verdana;"align="justify"><h2> O projekcie Czas Dojazdu</h2></p>'),
             HTML('<p style="font-size:20px; font-family:Verdana;"align="justify">&nbsp;&nbsp;&nbsp;&nbsp;Aplikacja Czas Dojazdu umożliwia wyszukanie pokoi do wynajęcia, których czas dojazdu nie przekracza danych parametrów od wybranego miejsca. Informacje o pokojach pobierane są z popularnych portali z ogłoszeniami.</p>'),
-            HTML('<p style="font-size:20px; font-family:Verdana;"align="justify">&nbsp;&nbsp;&nbsp;&nbsp;Jeżeli uważasz, że aplikację można poprawić, albo masz jakiekolwiek pytania bądź sugestie, proszę zostaw wiadomość w poniższym panelu.</p>')
+            HTML('<p style="font-size:20px; font-family:Verdana;"align="justify">&nbsp;&nbsp;&nbsp;&nbsp;Jeżeli uważasz, że aplikację można poprawić, albo masz jakiekolwiek pytania bądź sugestie, proszę zostaw wiadomość w poniższym panelu.</p>'),
             style = 'max-width:1000px;width:98%;margin:auto;'),
             
         div(id="disqus_thread",
-        HTML("<script>
-    (function() {  // DON'T EDIT BELOW THIS LINE
-        var d = document, s = d.createElement('script');
-        
-        s.src = '//mi2-czasojazdu.disqus.com/embed.js';
-        
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href='https://disqus.com/?ref_noscript' rel='nofollow'>comments powered by Disqus.</a></noscript>")
-)
+            HTML("<script>
+                   (function() {  // DON'T EDIT BELOW THIS LINE
+                       var d = document, s = d.createElement('script');
+                       
+                       s.src = '//mi2-czasojazdu.disqus.com/embed.js';
+                       
+                       s.setAttribute('data-timestamp', +new Date());
+                       (d.head || d.body).appendChild(s);
+                   })();
+               </script>
+               <noscript>Please enable JavaScript to view the <a href='https://disqus.com/?ref_noscript' rel='nofollow'>comments powered by Disqus.</a></noscript>")
+         )
       ),
       tabItem(
         "dane",
