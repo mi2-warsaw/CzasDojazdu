@@ -14,20 +14,20 @@ dashboardBody <- dashboardBody(
         "mieszkania",
         div(
           HTML('<p style="font-size:18px; font-family:Verdana;"align="justify">&nbsp;&nbsp;&nbsp;&nbsp;Obecnie opcja wyszukiwania mieszkań nie jest dostępna, ale bardzo chętnie pomożemy ją dodać. Jeżeli chcesz dołączyć do autorów, przygotowując skrypty udostępniające te dane w oparciu <a href="https://github.com/mi2-warsaw/CzasDojazdu/tree/master/Rscripts/collect_data">o nasze kody</a>, daj znać!</p>')
-        ),
-        div(id="disqus_thread",
-            HTML("<script>
-                   (function() {  // DON'T EDIT BELOW THIS LINE
-                       var d = document, s = d.createElement('script');
-                       
-                       s.src = '//mi2-czasojazdu.disqus.com/embed.js';
-                       
-                       s.setAttribute('data-timestamp', +new Date());
-                       (d.head || d.body).appendChild(s);
-                   })();
-               </script>
-               <noscript>Please enable JavaScript to view the <a href='https://disqus.com/?ref_noscript' rel='nofollow'>comments powered by Disqus.</a></noscript>")
-         )
+        )#,
+        # div(id="disqus_thread",
+        #     HTML("<script>
+        #            (function() {  // DON'T EDIT BELOW THIS LINE
+        #                var d = document, s = d.createElement('script');
+        #                
+        #                s.src = '//mi2-czasojazdu.disqus.com/embed.js';
+        #                
+        #                s.setAttribute('data-timestamp', +new Date());
+        #                (d.head || d.body).appendChild(s);
+        #            })();
+        #        </script>
+        #        <noscript>Please enable JavaScript to view the <a href='https://disqus.com/?ref_noscript' rel='nofollow'>comments powered by Disqus.</a></noscript>")
+        #  )
       ),
       tabItem(
         "cel",
@@ -53,20 +53,20 @@ dashboardBody <- dashboardBody(
       ),
       tabItem(
         "dane",
-        DT::dataTableOutput('content'),
-        div(id="disqus_thread",
-            HTML("<script>
-                   (function() {  // DON'T EDIT BELOW THIS LINE
-                       var d = document, s = d.createElement('script');
-                       
-                       s.src = '//mi2-czasojazdu.disqus.com/embed.js';
-                       
-                       s.setAttribute('data-timestamp', +new Date());
-                       (d.head || d.body).appendChild(s);
-                   })();
-               </script>
-               <noscript>Please enable JavaScript to view the <a href='https://disqus.com/?ref_noscript' rel='nofollow'>comments powered by Disqus.</a></noscript>")
-         )
+        DT::dataTableOutput('content')#,
+        # div(id="disqus_thread",
+        #     HTML("<script>
+        #            (function() {  // DON'T EDIT BELOW THIS LINE
+        #                var d = document, s = d.createElement('script');
+        #                
+        #                s.src = '//mi2-czasojazdu.disqus.com/embed.js';
+        #                
+        #                s.setAttribute('data-timestamp', +new Date());
+        #                (d.head || d.body).appendChild(s);
+        #            })();
+        #        </script>
+        #        <noscript>Please enable JavaScript to view the <a href='https://disqus.com/?ref_noscript' rel='nofollow'>comments powered by Disqus.</a></noscript>")
+        #  )
       )
       
 
