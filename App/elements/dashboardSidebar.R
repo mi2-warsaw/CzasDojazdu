@@ -56,8 +56,8 @@ dashboardSidebar <-
         "Wykresy",
         tabName = "wykresy",
         icon = icon("area-chart"),
-        badgeLabel = "TODO",
-        badgeColor = "green"
+        badgeLabel = "in progress",
+        badgeColor = "maroon"
       ),
       selectInput(
         "dzielnica",
