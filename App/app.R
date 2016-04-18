@@ -82,8 +82,10 @@ ui <- dashboardPage(
         "dane",
         DT::dataTableOutput('content') 
       )
+      
 
-    )
+    ),
+    div(HTML('<script id="dsq-count-scr" src="//mi2-czasdojazdu.disqus.com/count.js" async></script>'))
   )
 ) 
  
