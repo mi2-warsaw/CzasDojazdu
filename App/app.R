@@ -8,8 +8,9 @@ library(ggmap)
 library(stringi)
 library(RSQLite)
 
- 
- conn <- dbConnect( dbDriver( "SQLite" ), "../dane/czas_dojazdu.db" )
+setwd("C:/Users/Ola/Documents/CzasDojazdu/App")
+
+conn <- dbConnect( dbDriver( "SQLite" ), "../dane/czas_dojazdu.db" )
 dane <- list()
  dbGetQuery(conn, 'select cena, adres, dzielnica,  content, lon, lat, data_dodania
             from gumtree_warszawa_pokoje 
@@ -24,18 +25,6 @@ dane <- list()
  dane <- do.call("rbind", dane)
  
  dbDisconnect(conn)
-
-#  content <- dane[[1]]$content
-#  content <- content[1:6]
-#  cena <- c(800, 1000, 900, 850, 1000, 750)
-# data_dodania <- c("2016-04-08","2016-04-08", "2016-04-10", "2016-04-06", "2016-04-06", "2016-04-07")
-#  adres <- c("Abrahama 10", "Koszykowa 3", "Anielewicza" , "Banacha 2", "Saska 10", "Racławicka 11")
-#  dzielnica <- c("Praga", "Srodmiescie", "WOla", "Ochota", "Praga", "Mokotów")
-#  geo <- ggmap::geocode(paste("Warszawa", adres))
-#  lon <- geo$lon
-#  lat <- geo$lat
-#  dane <- data.frame(cena, adres, dzielnica, geo, lon, lat, content, data_dodania)
-#  dane
 
 source('elements/dashboardHeader.R')
 source('elements/dashboardSidebar.R')
@@ -112,7 +101,8 @@ server <- function(input, output, session) {
   })
 
   dane2  <- reactive({
-    dane <- dane %>% filter( as.character(dzielnica) %in% unlist(input$dzielnica),
+    dane <- dane %>% filter( 
+    #                       as.character(dzielnica) %in% unlist(input$dzielnica),
                             as.numeric(cena) >= input$cena[1] & as.numeric(cena) <= input$cena[2],
                             as.Date(data_dodania)>=(Sys.Date() - input$data) ) 
     dane
