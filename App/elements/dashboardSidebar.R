@@ -1,4 +1,5 @@
-conn <- dbConnect( dbDriver( "SQLite" ), "../dane/czas_dojazdu.db" )
+ conn <- dbConnect( dbDriver( "SQLite" ), "../dane/czas_dojazdu.db" )
+
 dane <- list()
 dbGetQuery(conn, 'select cena, adres, dzielnica,  content, lon, lat, data_dodania
             from gumtree_warszawa_pokoje 
@@ -59,13 +60,13 @@ dashboardSidebar <-
         badgeLabel = "in progress",
         badgeColor = "maroon"
       ),
-      selectInput(
-        "dzielnica",
-        "Wybierz dzielnicę: ",
-        choices = as.character(sort(unique(dane$dzielnica))),
-        multiple = TRUE,
-        selected = as.character(sort(unique(dane$dzielnica)))[1]
-      ),
+#       selectInput(
+#         "dzielnica",
+#         "Wybierz dzielnicę: ",
+#         choices = as.character(sort(unique(dane$dzielnica))),
+#         multiple = TRUE,
+#         selected = as.character(sort(unique(dane$dzielnica)))[1]
+#       ),
       textInput(
         "lokalizacja",
         "Lokalizacja docelowa: ",
