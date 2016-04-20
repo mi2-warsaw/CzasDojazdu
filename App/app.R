@@ -8,7 +8,6 @@ library(ggmap)
 library(stringi)
 library(RSQLite)
 
-setwd("C:/Users/Ola/Documents/CzasDojazdu/App")
 
 conn <- dbConnect( dbDriver( "SQLite" ), "../dane/czas_dojazdu.db" )
 dane <- list()
