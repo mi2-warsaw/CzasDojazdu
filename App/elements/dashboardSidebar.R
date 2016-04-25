@@ -1,4 +1,4 @@
- conn <- dbConnect( dbDriver( "SQLite" ), "../dane/czas_dojazdu.db" )
+conn <- dbConnect( dbDriver( "SQLite" ), "../dane/czas_dojazdu.db" )
 
 dane <- list()
 dbGetQuery(conn, 'select cena, adres, dzielnica,  content, lon, lat, data_dodania
@@ -69,35 +69,37 @@ dashboardSidebar <-
 #       ),
       textInput(
         "lokalizacja",
-        "Lokalizacja docelowa: ",
+        "Lokalizacja: ",
         value = "Koszykowa 75"
       ),
      sliderInput(
        "czas_doj",
-       "Maksymalny czas dojazdu w minutach :",
+       "Maksymalny czas dojazdu:",
        min = 0,
-       max = 120,
-       value= 30
+       max = 100,
+       value= 30, 
+       step = 5
      ),
      selectInput(
        "srodek_trans",
-       "Wybierz środek transportu: ",
+       "Srodek transportu: ",
        choices = c("Samochod" , "Rower" , "Pieszo"),
        selected = "Samochod"
      ),
      sliderInput(
        "cena",
-       "Wybierz zakres cenowy :",
+       "Zakres cenowy :",
        min = 0,
        max = 4000,
-       value=c(800,1500)
+       value=c(800,1500),
+       step = 50
      ),
      sliderInput(
        "data",
-       "Wybierz datę ogłoszenia (liczba ostatnich dni)",
-       min = 0,
-       max = 7,
-       value= 3
+       "Data ogłoszenia",
+       min = Sys.Date() - 7,
+       max = Sys.Date(),
+       value= c(Sys.Date() - 3, Sys.Date())
      ),
      actionButton("go", "Pokaż lokalizacje")
     )
