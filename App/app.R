@@ -1,3 +1,7 @@
+setwd("C:/Users/Ola/Documents/CzasDojazdu/App")
+
+
+
 .libPaths(c('/home/mkosinski/R/x86_64-pc-linux-gnu-library/3.2', .libPaths()))
 library(shiny)
 library(shinydashboard)
@@ -24,9 +28,11 @@ dane <- list()
  
  dbDisconnect(conn)
 
+
 source('elements/dashboardHeader.R')
 source('elements/dashboardSidebar.R')
 source('elements/dashboardBody.R')
+ 
  
 ui <- dashboardPage(
   skin = "black",
