@@ -34,6 +34,9 @@ dashboardBody <- dashboardBody(
         div(
             HTML('<p style="font-size:32px; font-family:Verdana;"align="justify"><h2> O projekcie Czas Dojazdu</h2></p>'),
             HTML('<p style="font-size:20px; font-family:Verdana;"align="justify">&nbsp;&nbsp;&nbsp;&nbsp;Aplikacja Czas Dojazdu umożliwia wyszukanie pokoi do wynajęcia, których czas dojazdu nie przekracza danych parametrów od wybranego miejsca. Informacje o pokojach pobierane są z popularnych portali z ogłoszeniami.</p>'),
+           
+            HTML('<img src="C:/Users/Ola/Documents/CzasDojazdu/App/czas.jpg" alt="Opis" style="width:304px;height:228px;>'),
+            
             HTML('<p style="font-size:20px; font-family:Verdana;"align="justify">&nbsp;&nbsp;&nbsp;&nbsp;Jeżeli uważasz, że aplikację można poprawić, albo masz jakiekolwiek pytania bądź sugestie, proszę zostaw wiadomość w poniższym panelu.</p>'),
             style = 'max-width:1000px;width:98%;margin:auto;'),
             
