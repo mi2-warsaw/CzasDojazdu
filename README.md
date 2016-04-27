@@ -15,7 +15,7 @@ Kody dostępne są w folderze  `App/`. Aplikacja jest udostępniana pod adresem 
 
 ### Autorzy
 
-- Web Harvesting [@michałcisek](https://github.com/michałcisek)
-- Shiny App Frontend [@abrodecka](https://github.com/abrodecka)
-- Analysis and Data Visualizations [@mikolajjj](https://github.com/mikolajjj)
+- Web Harvesting & Data Management [@michałcisek](https://github.com/michałcisek)
+- Shiny Application Frontend & User Experience [@abrodecka](https://github.com/abrodecka)
+- Data Analysis & Visualizations [@mikolajjj](https://github.com/mikolajjj)
 - Critical Elements Sewing [@MarcinKosinski](https://github.com/MarcinKosinski)
