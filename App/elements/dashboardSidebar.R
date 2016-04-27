@@ -82,7 +82,7 @@ dashboardSidebar <-
      ),
      selectInput(
        "srodek_trans",
-       "Srodek transportu: ",
+       "Środek transportu: ",
        choices = c("Samochod" , "Rower" , "Pieszo"),
        selected = "Samochod"
      ),
