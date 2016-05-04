@@ -120,20 +120,24 @@ scrapuj <- function (x, slownik, miasto = "Warszawa") {
   p2<-str_extract(p1,",.*")
   data_dodania<-str_replace_all(p2,"[,]","")
   
-  data_dodania<-str_replace_all(data_dodania[1],"stycznia","styczeń")
-  data_dodania<-str_replace_all(data_dodania[1],"lutego","luty")
-  data_dodania<-str_replace_all(data_dodania[1],"marca","marzec")
-  data_dodania<-str_replace_all(data_dodania[1],"kwietnia","kwiecień")
-  data_dodania<-str_replace_all(data_dodania[1],"maja","maj")
-  data_dodania<-str_replace_all(data_dodania[1],"czerwca","czerwiec")
-  data_dodania<-str_replace_all(data_dodania[1],"lipca","lipiec")
-  data_dodania<-str_replace_all(data_dodania[1],"sierpnia","sierpień")
-  data_dodania<-str_replace_all(data_dodania[1],"września","wrzesień")
-  data_dodania<-str_replace_all(data_dodania[1],"października","październik")
-  data_dodania<-str_replace_all(data_dodania[1],"listopada","listopad")
-  data_dodania<-str_replace_all(data_dodania[1],"grudnia","grudzień")
+  data_dodania<-str_replace_all(data_dodania[1],"stycznia","01")
+  data_dodania<-str_replace_all(data_dodania[1],"lutego","02")
+  data_dodania<-str_replace_all(data_dodania[1],"marca","03")
+  data_dodania<-str_replace_all(data_dodania[1],"kwietnia","04")
+  data_dodania<-str_replace_all(data_dodania[1],"maja","05")
+  data_dodania<-str_replace_all(data_dodania[1],"czerwca","06")
+  data_dodania<-str_replace_all(data_dodania[1],"lipca","07")
+  data_dodania<-str_replace_all(data_dodania[1],"sierpnia","08")
+  if (substring(strsplit(data_dodania,split=" ")[[1]][3],1,4)=="wrze") {
+    data_dodania<-str_replace_all(data_dodania[1],strsplit(data_dodania,split=" ")[[1]][3],"09")
+  }
+  if (substring(strsplit(data_dodania,split=" ")[[1]][3],1,2)=="pa") {
+    data_dodania<-str_replace_all(data_dodania[1],strsplit(data_dodania,split=" ")[[1]][3],"10")
+  }
+  data_dodania<-str_replace_all(data_dodania[1],"listopada","11")
+  data_dodania<-str_replace_all(data_dodania[1],"grudnia","12")
   
-  data_dodania<-as.Date(data_dodania,format=" %d %B %Y")
+  data_dodania<-as.Date(data_dodania,format=" %d %m %Y")
   
   
   return(list(cena = cena, #telefon = telefon, 
