@@ -29,6 +29,16 @@ adresy_w_bazce_olx %>%
                                 include.lowest = TRUE,
                                 dig.lab = 4))-> inputData_opis
 
+theme_RTCGA <- function(base_size = 11, base_family = "", ...){
+  list(theme_pander(gm = TRUE, gM = TRUE, ...) %+replace%
+         theme(panel.grid = element_line(), 
+               panel.grid.major = element_line(colour = "grey90", size = 0.2),
+               panel.grid.minor = element_line(colour = "grey98", size = 0.5),
+               legend.position = "top"), 
+       scale_colour_tableau(),
+       scale_fill_tableau())
+}
+
 inputData_opis %>%
   filter(cena <=2000) %>%
   ggplot(aes(cena, dlugosc_opisu)) +

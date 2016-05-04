@@ -3,14 +3,17 @@ library(dplyr)
 library(ggplot2)
 library(tidyr)
 
+load("dane/dane_df.rda")
+
+# przypisanie dzielnic do przedziałów cen wynajmu
+inputData$cena <- as.numeric(inputData$cena)
 inputData %>%
   filter(cena != "") %>%
-  mutate(dzielnica = ifelse(dzielnica == "Praga Północ",
-                            "Praga-Północ",
-                            dzielnica)) %>%
-  mutate(dzielnica = ifelse(dzielnica == "Praga Południe",
-                            "Praga-Południe",
-                            dzielnica)) %>%
+  filter(cena >= quantile(cena, probs = 0.25) &
+           cena <= quantile(cena, probs = 0.95)) %>%
+  # filter(!cena %in% boxplot.stats(cena)$out) %>%
+  mutate(dzielnica = ifelse(dzielnica == "Praga Północ", "Praga-Północ", dzielnica)) %>%
+  mutate(dzielnica = ifelse(dzielnica == "Praga Południe", "Praga-Południe", dzielnica)) %>%
   mutate(cena = as.numeric(cena)) %>%
   group_by(dzielnica) %>%
   summarise(min_cena = min(cena),
@@ -19,48 +22,39 @@ inputData %>%
             count = n()) %>%
   ungroup() %>%
   mutate(sr_cena_cut = cut(sr_cena,
-                           round(quantile(sr_cena,
-                                    probs = seq(0,1,0.25)),-1),
+                           round(quantile(sr_cena, probs = seq(0,1,0.25)),-1),
                            include.lowest = TRUE,
-                           dig.lab = 4)
-         ) -> przedzialy_cenowe
+                           dig.lab = 4)) %>%
+  filter(dzielnica %in% unique(dane.df$dzielnica)) -> przedzialy_cenowe
 
-przedzialy_cenowe$dzielnica <- as.factor(przedzialy_cenowe$dzielnica)
+# Rysowanie mapy ----------------------------------------------------------
 
+# współrzędne dla umiejscowienia etykiet (nazw dzielnic)
 etykieta_pozycja <- aggregate(cbind(long, lat) ~ dzielnica, 
                               data = dane.df, FUN = function(x) mean(range(x)))
 colnames(etykieta_pozycja) <- c("dzielnica", "long2", "lat2")
 
-przedzialy_cenowe <- przedzialy_cenowe %>%
+dane <- przedzialy_cenowe %>%
   left_join(etykieta_pozycja, by = "dzielnica") %>%
   mutate(etykieta = paste0(dzielnica, "\n", "(", round(sr_cena,-1), ")"))
 
-przedzialy_cenowe$etykieta <- gsub("-", "-\n", przedzialy_cenowe$etykieta)
+dane$etykieta <- gsub("-", "-\n", dane$etykieta)
+dane$etykieta_cena <- gsub(",", " - ", dane$sr_cena_cut)
+dane$etykieta_cena <- gsub("\\]", "", dane$etykieta_cena)
+dane$etykieta_cena <- gsub("\\(", "", dane$etykieta_cena)
+dane$etykieta_cena <- gsub("\\[[0-9]+ -", "do", dane$etykieta_cena)
 
-przedzialy_cenowe$etykieta_cena <- gsub(",", " - ", przedzialy_cenowe$sr_cena_cut)
-przedzialy_cenowe$etykieta_cena <- gsub("\\]", "", przedzialy_cenowe$etykieta_cena)
-przedzialy_cenowe$etykieta_cena <- gsub("\\(", "", przedzialy_cenowe$etykieta_cena)
-przedzialy_cenowe$etykieta_cena <- gsub("\\[[0-9]+ -", "do", przedzialy_cenowe$etykieta_cena)
-
-
-# ustawienie kolejno�ci poziom�w czynnika
-przedzialy_cenowe$etykieta_cena <- factor(przedzialy_cenowe$etykieta_cena, 
-                                          levels = przedzialy_cenowe$etykieta_cena[order(przedzialy_cenowe$sr_cena_cut)])
-
-
-dane.df$dzielnica <- as.factor(dane.df$dzielnica)
-
+# ustawienie kolejności poziomów czynnika
+dane$etykieta_cena <- factor(dane$etykieta_cena, levels = dane$etykieta_cena[order(dane$sr_cena_cut)])
 
 dane.df %>%
-  left_join(przedzialy_cenowe,
-            by = "dzielnica") %>% 
-  ggplot(aes(long, lat)) + 
-  aes(long, lat, group = group, fill = etykieta_cena) + 
-  geom_polygon(aes(group=group)) +
+  left_join(dane, by = "dzielnica")  %>%
+  ggplot(aes(long, lat, group = group, fill = etykieta_cena)) + 
+  geom_polygon(aes(group = group)) +
   geom_path(color = "grey") +
   coord_equal() +
   theme_bw() +
-  scale_fill_tableau(name="Przedzia�y cen") +
+  scale_fill_tableau(name="Przedziały cen") +
   theme(axis.ticks = element_blank(), 
         axis.text.x = element_blank(),
         axis.text.y = element_blank(),
@@ -70,6 +64,6 @@ dane.df %>%
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         legend.key = element_blank()) +
-  geom_text(aes(long2, lat2, label = etykieta), size = 4) +
-  ggtitle("�rednie ceny wynajmu mieszka� w dzielnicach Warszawy")
+  ggtitle("Średnie ceny wynajmu mieszkań w dzielnicach Warszawy")
+# + geom_text(data = dane, aes(long2, lat2, label = etykieta), size = 4)
 
