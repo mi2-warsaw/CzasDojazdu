@@ -40,13 +40,13 @@ dashboardBody <- dashboardBody(
             HTML('<p style="font-size:32px; font-family:Verdana;"align="justify"><h2> O projekcie Czas Dojazdu</h2></p>'),
             HTML('<p style="font-size:16px; font-family:Verdana;"align="justify">Aplikacja Czas Dojazdu umożliwia wyszukanie pokoi do wynajęcia, których czas dojazdu nie przekracza danych parametrów od wybranego miejsca. Informacje o pokojach pobierane są z popularnych portali z ogłoszeniami.</p>'),
            
-            HTML('<img src="/lokalizacja.jpg" alt="Opis" width="140" height="60" align = "left" >'),
+            HTML('<img src="lokalizacja.jpg" alt="Opis" width="140" height="60" align = "left" >'),
             HTML('<p style="font-size:15px; font-family:Verdana;"align="justify"> 1) Podaj lokalizację w Warszawie, do której chciałbyś dojechać.</p><br><br>'),
             
-            HTML('<img src="/transport.jpg" alt="Opis" width="140" height="60" align = "left" >'),
+            HTML('<img src="/CzasDojazdu/App/transport.jpg" alt="Opis" width="140" height="60" align = "left" >'),
             HTML('<p style="font-size:15px; font-family:Verdana;"align="justify"> 2) Wybierz środek transportu.  Umożliwiamy 3 opcje: samochód,  rower oraz pieszo.</p><br><br>'),
             
-            HTML('<img src="/czas.jpg" alt="Opis" width="140" height="60" align = "left" >'),
+            HTML('<img src="/CzasDojazdu/App/www/czas.jpg" alt="Opis" width="140" height="60" align = "left" >'),
             HTML('<p style="font-size:15px; font-family:Verdana;"align="justify"> 3) Określ maksymalny czas dojazdu (w minutach).</p><br><br>'),
             
             HTML('<img src="/cena.jpg" alt="Opis" width="140" height="60" align = "left" >'),
