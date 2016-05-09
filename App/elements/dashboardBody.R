@@ -43,25 +43,25 @@ dashboardBody <- dashboardBody(
             HTML('<img src="lokalizacja.jpg" alt="Opis" width="140" height="60" align = "left" >'),
             HTML('<p style="font-size:15px; font-family:Verdana;"align="justify"> 1) Podaj lokalizację w Warszawie, do której chciałbyś dojechać.</p><br><br>'),
             
-            HTML('<img src="/CzasDojazdu/App/transport.jpg" alt="Opis" width="140" height="60" align = "left" >'),
+            HTML('<img src="transport.jpg" alt="Opis" width="140" height="60" align = "left" >'),
             HTML('<p style="font-size:15px; font-family:Verdana;"align="justify"> 2) Wybierz środek transportu.  Umożliwiamy 3 opcje: samochód,  rower oraz pieszo.</p><br><br>'),
             
-            HTML('<img src="/CzasDojazdu/App/www/czas.jpg" alt="Opis" width="140" height="60" align = "left" >'),
+            HTML('<img src="czas.jpg" alt="Opis" width="140" height="60" align = "left" >'),
             HTML('<p style="font-size:15px; font-family:Verdana;"align="justify"> 3) Określ maksymalny czas dojazdu (w minutach).</p><br><br>'),
             
-            HTML('<img src="/cena.jpg" alt="Opis" width="140" height="60" align = "left" >'),
+            HTML('<img src="cena.jpg" alt="Opis" width="140" height="60" align = "left" >'),
             HTML('<p style="font-size:15px; font-family:Verdana;"align="justify"> 4) Podaj zakres cenowy.</p><br><br>'),
             
-            HTML('<img src="/data.jpg" alt="Opis" width="140" height="60" align = "left" >'),
+            HTML('<img src="data.jpg" alt="Opis" width="140" height="60" align = "left" >'),
             HTML('<p style="font-size:15px; font-family:Verdana;"align="justify"> 5) Sprecyzuj datę ogłoszeń. (Sugerujemy ostatnie 2-3 dni, ze względu na aktualność)</p><br><br>'),
             
-            HTML('<img src="/pokaz.jpg" alt="Opis" width="140" height="60" align = "left" >'),
+            HTML('<img src="pokaz.jpg" alt="Opis" width="140" height="60" align = "left" >'),
             HTML('<p style="font-size:15px; font-family:Verdana;"align="justify">  6) Następnie kliknij w poniższy przycisk :) </p><br><br>'),
             
-            HTML('<img src="/mapa.jpg" alt="Opis" width="140" height="60" align = "left" >'),
+            HTML('<img src="mapa.jpg" alt="Opis" width="140" height="60" align = "left" >'),
             HTML('<p style="font-size:15px; font-family:Verdana;"align="justify">  7) Po przejściu do panelu Pokoje/Mieszkania, dostaniesz następujący wynik: zielony marker oznacza wskazaną przez Ciebie lokalizację, niebieski to oferty spełniające Twoje oczekiwania. </p><br>'),
             
-            HTML('<img src="/dokladnie.jpg" alt="Opis" width="140" height="60" align = "left" >'),
+            HTML('<img src="dokladnie.jpg" alt="Opis" width="140" height="60" align = "left" >'),
             HTML('<p style="font-size:15px; font-family:Verdana;"align="justify">  8) Po kliknięciu na marker otrzymasz szczegółowe informacje odnośnie oferty: adres, link do ogłoszenia, cenę oraz wielkość.  </p><br><br>'),
             
             
@@ -104,6 +104,7 @@ dashboardBody <- dashboardBody(
                  box(
         div(HTML('
                 <center>
+                <img src="michal.jpg" align="center" width="150" height="150">
                 <p style="font-size:15px; font-family:Verdana;"align="justify"><h4>Michał Cisek</h4></p>
                 <p style="font-size:15px; font-family:Verdana;"align="justify"><h5>Web Harvesting & Data Management</h5></p>
 
@@ -125,6 +126,7 @@ dashboardBody <- dashboardBody(
          box(
         div(HTML('
                 <center>
+                <img src="aleksandra.jpg" align="center" width="150" height="150">
                 <p style="font-size:15px; font-family:Verdana;"align="justify"><h4>Aleksandra Brodecka</h4></p>
                 <p style="font-size:15px; font-family:Verdana;"align="justify"><h5>Shiny Application Frontend & User Experience</h5></p>
 
@@ -143,6 +145,7 @@ dashboardBody <- dashboardBody(
         box(
         div(HTML('
                 <center>
+                <img src="tomasz.png" align="center" width="150" height="150">
                 <p style="font-size:15px; font-family:Verdana;"align="justify"><h4>Tomasz Mikołajczyk</h4></p>
                 <p style="font-size:15px; font-family:Verdana;"align="justify"><h5>Data Analysis & Visualizations</h5></p>
 
@@ -164,6 +167,7 @@ dashboardBody <- dashboardBody(
         box(
         div(HTML('
                 <center>
+                <img src="marcin.jpg" align="center" width="150" height="150">
                 <p style="font-size:15px; font-family:Verdana;"align="justify"><h4>Marcin Kosiński</h4></p>
                 <p style="font-size:15px; font-family:Verdana;"align="justify"><h5>e-mails writing & forwarding</h5></p>
                 <a href="https://github.com/MarcinKosinski" style="font-size:2.0em;">
