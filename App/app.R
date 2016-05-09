@@ -1,4 +1,4 @@
-.libPaths(c('/home/mkosinski/R/x86_64-pc-linux-gnu-library/3.2', .libPaths()))
+#.libPaths(c('/home/mkosinski/R/x86_64-pc-linux-gnu-library/3.2', .libPaths()))
 library(shiny)
 library(shinydashboard)
 library(leaflet)
