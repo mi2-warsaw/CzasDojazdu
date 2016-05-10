@@ -179,6 +179,8 @@ names(adresy) <- NULL
 adresydb<- as.vector(as.matrix(dbGetQuery(polaczenie,"select link from olx_warszawa_pokoje")))
 adresy<-adresy[!(adresy %in% adresydb)]
 
+if (length(adresy)>0) {
+
 dane<-lapply(adresy,scrapuj, slownik = slownik)
 
 
@@ -200,5 +202,6 @@ insert<-paste0("INSERT INTO olx_warszawa_pokoje(cena,opis,
 dbGetQuery(polaczenie,insert)
 
 #df<-dbGetQuery(polaczenie,"select * from olx_warszawa_pokoje")
+}
 
 dbDisconnect(polaczenie)
