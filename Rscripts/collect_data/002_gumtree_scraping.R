@@ -154,6 +154,8 @@ adresy<-c(pbsapply(linki,aktualne_oferty))
 adresydb<- as.vector(as.matrix(dbGetQuery(polaczenie,"select link from gumtree_warszawa_pokoje")))
 adresy<-adresy[!(adresy %in% adresydb)]
 
+
+if (length(adresy) >0 ) {
 dane<-pblapply(adresy,scrapuj, slownik = slownik)
 
 
@@ -177,5 +179,5 @@ dbGetQuery(polaczenie,insert)
 # mala obczajka jakie sa potencjalnei adresy
 # dbGetQuery(polaczenie, "select * from gumtree_warszawa_pokoje") -> adresy_w_bazce
 # repair_encoding(adresy_w_bazce$adres, from = "UTF-8")
-
+}
 dbDisconnect(polaczenie)
