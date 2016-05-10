@@ -26,7 +26,8 @@ scrapuj <- function (x, slownik, miasto = "Warszawa") {
   web %>%
     html_nodes('.not-arranged') %>%
     html_text() %>%
-    str_replace_all("[^0-9]","")-> cena
+    str_replace_all("[^0-9\\,]","") %>%
+    gsub(pattern=",", replacement = ".", fixed = TRUE)-> cena
   if(length(cena)==0) cena<-""
   cena<-cena[1]
   
