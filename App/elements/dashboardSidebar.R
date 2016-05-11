@@ -76,7 +76,7 @@ dashboardSidebar <-
        "czas_doj",
        "Maksymalny czas dojazdu:",
        min = 0,
-       max = 100,
+       max = 90,
        value= 30, 
        step = 5
      ),
@@ -94,12 +94,13 @@ dashboardSidebar <-
        value=c(800,1500),
        step = 50
      ),
-     sliderInput(
+     dateRangeInput(
        "data",
-       "Data ogłoszenia",
-       min = Sys.Date() - 7,
-       max = Sys.Date(),
-       value= c(Sys.Date() - 3, Sys.Date())
+       "Oferty z dni",
+       min = as.character(Sys.Date() - 7),
+       max = as.character(Sys.Date()),
+       start = as.character(Sys.Date() - 3),
+       end = as.character(Sys.Date())
      ),
      actionButton("go", "Pokaż lokalizacje")
     )

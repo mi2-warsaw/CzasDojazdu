@@ -20,7 +20,13 @@ dane <- list()
             where cena <> "" and adres <> "" and dzielnica <> "" 
             and content <> "" and lon <> "" and lat <> "" and data_dodania <> "" ') -> dane[[2]]
  
- dane <- do.call("rbind", dane)
+ dane <- do.call("rbind", dane) %>% 
+   filter(cena != "NA") %>% 
+   mutate(cena = as.numeric(as.character(cena)),
+          data_dodania = as.Date(data_dodania)) %>%
+   filter(cena > 200,
+          nchar(adres) > 2)
+   
  
  dbDisconnect(conn)
 
@@ -101,10 +107,10 @@ server <- function(input, output, session) {
   })
 
   dane2  <- reactive({
-    dane <- dane %>% filter( 
-    #                       as.character(dzielnica) %in% unlist(input$dzielnica),
-                            as.numeric(cena) >= input$cena[1] & as.numeric(cena) <= input$cena[2],
-                            as.Date(data_dodania)>=(Sys.Date() - input$data) ) 
+    dane <- dane %>% 
+      filter(cena >= input$cena[1] & cena <= input$cena[2],
+             as.Date(data_dodania) >=  as.Date(input$data[[1]]),
+             as.Date(data_dodania) <=  as.Date(input$data[[2]]))
     dane
   })
   
@@ -118,10 +124,10 @@ server <- function(input, output, session) {
                     to = paste("Warszawa", input$lokalizacja), 
                     mode = typ,
                     output = "simple")
-    czas <- as.integer(czas$minutes)
-    dane <- cbind(dane2(), czas)
-    dane<- dane %>% filter(czas <= input$czas_doj)
-    dane
+    # czas <- as.integer(czas$minutes)
+    # dane <- cbind(dane2(), czas)
+    # dane<- dane %>% filter(czas <= input$czas_doj)
+    dane2()[as.integer(czas$minutes) <= input$czas_doj, ]
   })
   
   
@@ -145,10 +151,14 @@ server <- function(input, output, session) {
     green = "green.png"
     
     if (v$doPlot == FALSE) { 
-      leaflet()%>%
-      addTiles() %>% addMarkers(geocode$lon, geocode$lat, icon = list(
-                                 iconUrl = green, iconSize = 40), popup = content_lok
-                               )
+      leaflet() %>%
+      addTiles() %>% 
+        addMarkers(geocode$lon,
+                   geocode$lat,
+                   icon = 
+                     list(iconUrl = green,
+                          iconSize = 40),
+                   popup = content_lok)
     } else {
     
     
