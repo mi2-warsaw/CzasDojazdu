@@ -14,7 +14,7 @@ aktualne_oferty <- function(link) {
   return(linki)
 }
 scrapuj <- function (x, slownik, miasto = "Warszawa") {
-  
+  tryCatch({
   read_html(x, encoding = "UTF-8") -> web
   
   # cena
@@ -116,6 +116,12 @@ scrapuj <- function (x, slownik, miasto = "Warszawa") {
               opis = opis, link_do_zdj = link_do_zdj, adres = adres,
               dzielnica=dzielnica, data_dodania = data_dodania,
               link=x, content = content, lon = wspolrzedne$lon, lat = wspolrzedne$lat))
+  }, error = function(e){
+    return(list(cena = NA, wielkosc = NA, #telefon = telefon,
+              opis = NA, link_do_zdj = NA, adres = NA,
+              dzielnica = NA, data_dodania = NA,
+              link = x, content = NA, lon = NA, lat = NA))
+  })
 }
 
 

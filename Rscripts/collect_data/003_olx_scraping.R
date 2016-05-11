@@ -12,6 +12,7 @@ aktualne_oferty <- function(link) {
 }
 
 scrapuj <- function (x, slownik, miasto = "Warszawa") {
+  tryCatch({
   read_html(x) -> web
   
   # dzielnica
@@ -146,6 +147,12 @@ scrapuj <- function (x, slownik, miasto = "Warszawa") {
               content=content, lon=wspolrzedne$lon, lat=wspolrzedne$lat,
               link_do_zdj=link_do_zdj, dzielnica=dzielnica, 
               data_dodania = data_dodania))
+}, error = function(e){
+    return(list(cena = NA, wielkosc = NA, #telefon = telefon,
+              opis = NA, link_do_zdj = NA, adres = NA,
+              dzielnica = NA, data_dodania = NA,
+              link = x, content = NA, lon = NA, lat = NA))
+  })
 }
 
 tworz_olx_pokoje <- function(polaczenie){
