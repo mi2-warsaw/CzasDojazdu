@@ -23,9 +23,15 @@ dane <- list()
  dane <- do.call("rbind", dane) %>% 
    filter(cena != "NA") %>% 
    mutate(cena = as.numeric(as.character(cena)),
-          data_dodania = as.Date(data_dodania)) %>%
+          data_dodania = as.Date(data_dodania),
+          lon = as.numeric(as.character(lon)),
+          lat = as.numeric(as.character(lat))) %>%
    filter(cena > 200,
-          nchar(adres) > 2)
+          nchar(adres) > 2,
+          lat <= 52.368653,
+          lat >= 52.098673,
+          lon <= 21.282646,
+          lon >= 20.851555)
    
  
  dbDisconnect(conn)
