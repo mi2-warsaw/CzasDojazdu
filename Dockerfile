@@ -26,9 +26,10 @@ RUN R -e "install.packages('pbapply', repos='https://cran.rstudio.com/')"
 RUN R -e "install.packages('stringdist', repos='https://cran.rstudio.com/')"
 RUN R -e "install.packages('data.table', repos='https://cran.rstudio.com/')"
 
-RUN mkdir -p app/Rscripts app/dane
+RUN mkdir -p app/Rscripts app/dane app/dicts
 ADD Rscripts /app/Rscripts
 ADD dane /app/dane
+ADD dicts /app/dicts
 ADD 000_runme.R /app/
 
 VOLUME /srv/shiny-server/CzasDojazdu/
