@@ -33,11 +33,11 @@ dane <- list()
           lat <= 52.368653,
           lat >= 52.098673,
           lon <= 21.282646,
-          lon >= 20.851555) #%>%
-   #group_by(adres) %>%
-   #top_n(1, -cena) %>%
-   #top_n(1, link) %>%
-   #ungroup
+          lon >= 20.851555) %>%
+   group_by(adres) %>%
+   top_n(1, -cena) %>%
+   top_n(1, link) %>%
+   ungroup
    
  
  dbDisconnect(conn)
@@ -74,12 +74,12 @@ server <- function(input, output, session) {
   
   dane3 <-  reactive({
     
-    adrsy <- dane2()$adres
+    adresy <- dane2()$adres
     
     if (input$srodek_trans =="Samochod") typ = "driving"
     if (input$srodek_trans =="Rower") typ = "bicycling"
     if (input$srodek_trans =="Pieszo") typ = "walking"
-    czas <- mapdist(from =  adrsy, 
+    czas <- mapdist(from =  paste("Warszawa", adresy), 
                     to = paste("Warszawa", input$lokalizacja), 
                     mode = typ,
                     output = "simple") %>% unique
