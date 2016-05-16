@@ -90,6 +90,7 @@ dashboardBody <- dashboardBody(
       ),
       tabItem(
         "dane",
+        div(HTML('<p> Tabela przedstawi dane spełniające wymagania sprecyzowane w lewym panelu, po kliknięciu \'Pokaż Lokalizacje\'. <a href="http://mi2.mini.pw.edu.pl:3838/CzasDojazdu/dane/">Pełne dane dostępne są tutaj.</a></p>')),
         DT::dataTableOutput('content')#,
         # div(id="disqus_thread",
         #     HTML("<script>

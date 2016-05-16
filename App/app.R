@@ -10,7 +10,7 @@ library(RSQLite)
 
 conn <- dbConnect( dbDriver( "SQLite" ), "../dane/czas_dojazdu.db" )
 dane <- list()
- dbGetQuery(conn, 'select cena, adres, dzielnica,  content, lon, lat, data_dodania
+ dbGetQuery(conn, 'select cena, adres, dzielnica,  content, lon, lat, data_dodania, link
             from gumtree_warszawa_pokoje 
             where cena <> "" and adres <> "" and dzielnica <> "" 
             and content <> "" and lon <> "" and lat <> "" and data_dodania <> "" ') -> dane#[[1]]
@@ -83,12 +83,13 @@ server <- function(input, output, session) {
   })
   
   
-  output$content <- DT::renderDataTable(
+  output$content <- DT::renderDataTable({
     if (v$doPlot == FALSE) { 
       DT::datatable(data.frame(dzielnica = "", adres = "", cena="", czas="", data_dodania = ""))
     } else {
-    DT::datatable(dane3()[, c("dzielnica", "adres", "cena", "czas", "data_dodania")])
+    DT::datatable(dane3()[, c("dzielnica", "adres", "cena", "data_dodania", "link")])
     }
+  }, escape = FALSE
   )
   
   
