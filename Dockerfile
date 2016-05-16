@@ -2,6 +2,9 @@ FROM rocker/r-base:latest
 
 MAINTAINER Marcin Kosiński "m.p.kosinski@gmail.com"
 
+RUN apt-get install -y openssl-devel libcurl-devel
+
+
 # install additional packages
 RUN R -e "install.packages('shinydashboard', repos='https://cran.rstudio.com/')"
 RUN R -e "install.packages('leaflet', repos='https://cran.rstudio.com/')"
