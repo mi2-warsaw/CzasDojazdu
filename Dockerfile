@@ -2,6 +2,13 @@ FROM rocker/r-base:latest
 
 MAINTAINER Marcin Kosiński "m.p.kosinski@gmail.com"
 
+# curl for httr and rvest
+RUN apt-get update \
+	&& apt-get install -t unstable -y --no-install-recommends \
+	openssl-devel \
+	libcurl-devel
+
+
 # install additional packages
 RUN R -e "install.packages('shinydashboard', repos='https://cran.rstudio.com/')"
 RUN R -e "install.packages('leaflet', repos='https://cran.rstudio.com/')"

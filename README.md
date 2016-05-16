@@ -12,10 +12,10 @@ Dane udostępniane są pod adresem [http://mi2.mini.pw.edu.pl:3838/CzasDojazdu/d
 
 Kody dostępne są w folderze  `App/`. Aplikacja jest udostępniana pod adresem [https://mi2.mini.pw.edu.pl:3838/CzasDojazdu/App/](https://mi2.mini.pw.edu.pl:3838/CzasDojazdu/App/)
 
-## Dockery
+## Dockery 
 
 Dane pobierane są dzięki konteneryzacji. Instrukcje z konfiguracją Dockera uruchamiającego pobieranie danych 
-dostępne są w pliku Dockerfile.
+dostępne są w pliku Dockerfile. [Status builda Dockera pobierającego dane.](https://hub.docker.com/r/marcinkosinski/czasdojazdu/builds/bqh6esxcs32l6enaezq2vil/)
 
 Aplikacja działa w obrazie Docker'a Shiny Server skonfigurowanego tutaj [https://github.com/mi2-warsaw/rocker/tree/master/shiny-extra](https://github.com/mi2-warsaw/rocker/tree/master/shiny-extra)
 
