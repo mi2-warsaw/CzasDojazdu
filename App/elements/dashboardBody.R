@@ -18,6 +18,7 @@ dashboardBody <- dashboardBody(
       ),
       tabItem(
         "analizy",
+        div(HTML('<p> Jeżeli mapa się nie wyświetla, spróbuj dwukrotnie kliknąć w górny pasek przeglądarki, w celu wyśrodkowania mapy. </p>')),
         includeHTML("../Rscripts/mapa/mapa.html")
       ),
       tabItem(

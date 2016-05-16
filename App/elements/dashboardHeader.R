@@ -80,27 +80,6 @@ dashboardHeader <- dashboardHeader(
          href = "https://github.com/orgs/mi2-warsaw/teams/wczasowicze",
          icon = icon("group")
       )
-    ),
-    dropdownMenu(
-      type = "tasks",
-      badgeStatus = "success",
-      taskItem(value = 70, color = "green",
-        "Kompletowanie danych"
-      ),
-      taskItem(value = 95, color = "green",
-        "Weryfikacja danych"
-      ),
-      taskItem(value = 50, color = "yellow",
-        "Wizualizacja danych"
-      ),
-      taskItem(value = 100, color = "aqua",
-        "Automatyzacja"
-      ),
-      taskItem(value = 10, color = "red",
-        "Dokumentacja"
-      ),
-      taskItem(value = 60, color = "yellow",
-        "Całkowicie"
-      )
+    
     )
    )
