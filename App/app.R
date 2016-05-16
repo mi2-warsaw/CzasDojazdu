@@ -76,7 +76,7 @@ server <- function(input, output, session) {
     if (input$srodek_trans =="Samochod") typ = "driving"
     if (input$srodek_trans =="Rower") typ = "bicycling"
     if (input$srodek_trans =="Pieszo") typ = "walking"
-    czas <- mapdist(from =  dane$adres, 
+    czas <- mapdist(from =  dane2()$adres, 
                     to = paste("Warszawa", input$lokalizacja), 
                     mode = typ,
                     output = "simple") %>% unique
