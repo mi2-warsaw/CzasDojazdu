@@ -73,10 +73,12 @@ server <- function(input, output, session) {
   
   dane3 <-  reactive({
     
+    adrsy <- dane2()$adres
+    
     if (input$srodek_trans =="Samochod") typ = "driving"
     if (input$srodek_trans =="Rower") typ = "bicycling"
     if (input$srodek_trans =="Pieszo") typ = "walking"
-    czas <- mapdist(from =  dane2()$adres, 
+    czas <- mapdist(from =  adrsy, 
                     to = paste("Warszawa", input$lokalizacja), 
                     mode = typ,
                     output = "simple") %>% unique
