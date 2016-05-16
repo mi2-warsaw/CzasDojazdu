@@ -7,6 +7,7 @@ dashboardBody <- dashboardBody(
       ga('create', 'UA-76544868-1', 'auto');
       ga('send', 'pageview');")
     ),
+    tags$head(tags$script(src="dzielnice.js")),
     # includeCSS('monokai.css'),
     # includeCSS('skel.css'),
     # includeCSS('style.css'),
@@ -14,6 +15,10 @@ dashboardBody <- dashboardBody(
       tabItem(
         "pokoje",
         leafletOutput("mymap" , height = 800)
+      ),
+      tabItem(
+        "analizy",
+        includeHTML("../Rscripts/mapa/mapa.html")
       ),
       tabItem(
         "mieszkania",

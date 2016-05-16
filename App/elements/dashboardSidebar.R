@@ -67,10 +67,10 @@ dashboardSidebar <-
         badgeColor = "green"
       ),
       menuItem(
-        "Wykresy",
-        tabName = "wykresy",
+        "Analizy",
+        tabName = "analizy",
         icon = icon("area-chart"),
-        badgeLabel = "in progress",
+        badgeLabel = "prototype",
         badgeColor = "maroon"
       ),
 #       selectInput(
