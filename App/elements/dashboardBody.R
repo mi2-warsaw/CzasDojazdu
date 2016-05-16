@@ -14,6 +14,7 @@ dashboardBody <- dashboardBody(
     tabItems(
       tabItem(
         "pokoje",
+        verbatimTextOutput("dane_debug"),
         leafletOutput("mymap" , height = 800)
       ),
       tabItem(

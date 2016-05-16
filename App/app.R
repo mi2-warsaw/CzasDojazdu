@@ -89,6 +89,25 @@ server <- function(input, output, session) {
   })
   
   
+    output$dane_debug <-  renderPrint({
+    
+    adrsy <- dane2()$adres
+    
+    if (input$srodek_trans =="Samochod") typ = "driving"
+    if (input$srodek_trans =="Rower") typ = "bicycling"
+    if (input$srodek_trans =="Pieszo") typ = "walking"
+    czas <- mapdist(from =  adrsy, 
+                    to = paste("Warszawa", input$lokalizacja), 
+                    mode = typ,
+                    output = "simple") %>% unique
+    # czas <- as.integer(czas$minutes)
+    # dane <- cbind(dane2(), czas)
+    # dane<- dane %>% filter(czas <= input$czas_doj)
+    dane2()[as.integer(czas$minutes) <= input$czas_doj, ] %>% nrow()
+  })
+    
+
+  
   output$content <- DT::renderDataTable({
     if (v$doPlot == FALSE) { 
       DT::datatable(data.frame(dzielnica = "", adres = "", cena="", czas="", data_dodania = ""))
