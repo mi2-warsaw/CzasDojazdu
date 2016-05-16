@@ -32,7 +32,11 @@ dane <- list()
           lat <= 52.368653,
           lat >= 52.098673,
           lon <= 21.282646,
-          lon >= 20.851555)
+          lon >= 20.851555) %>%
+   group_by(adres) %>%
+   top_n(1, -cena) %>%
+   top_n(1, link) %>%
+   ungroup
    
  
  dbDisconnect(conn)
@@ -72,10 +76,10 @@ server <- function(input, output, session) {
     if (input$srodek_trans =="Samochod") typ = "driving"
     if (input$srodek_trans =="Rower") typ = "bicycling"
     if (input$srodek_trans =="Pieszo") typ = "walking"
-    czas <- mapdist(from = paste("Warszawa", dane2()$adres), 
+    czas <- mapdist(from =  dane$adres, 
                     to = paste("Warszawa", input$lokalizacja), 
                     mode = typ,
-                    output = "simple")
+                    output = "simple") %>% unique
     # czas <- as.integer(czas$minutes)
     # dane <- cbind(dane2(), czas)
     # dane<- dane %>% filter(czas <= input$czas_doj)
@@ -118,6 +122,12 @@ server <- function(input, output, session) {
     
     leaflet() %>%
       addTiles() %>%
+              addMarkers(geocode$lon,
+                   geocode$lat,
+                   icon = 
+                     list(iconUrl = green,
+                          iconSize = 40),
+                   popup = content_lok) %>%
       addMarkers(dane3()$lon, dane3()$lat, icon = list(
         iconUrl = blue, iconSize = 40
       ), popup = dane3()$content) %>%
@@ -127,7 +137,6 @@ server <- function(input, output, session) {
     }
     
   })
-  
   
 }
 
