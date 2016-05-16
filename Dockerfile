@@ -2,7 +2,11 @@ FROM rocker/r-base:latest
 
 MAINTAINER Marcin Kosiński "m.p.kosinski@gmail.com"
 
-RUN apt-get install -y openssl-devel libcurl-devel
+# curl for httr and rvest
+RUN apt-get update \
+	&& apt-get install -t unstable -y --no-install-recommends \
+	openssl-devel \
+	libcurl-devel
 
 
 # install additional packages
