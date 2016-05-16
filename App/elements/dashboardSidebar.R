@@ -1,18 +1,31 @@
 conn <- dbConnect( dbDriver( "SQLite" ), "../dane/czas_dojazdu.db" )
-
 dane <- list()
-dbGetQuery(conn, 'select cena, adres, dzielnica,  content, lon, lat, data_dodania
+ dbGetQuery(conn, 'select cena, adres, dzielnica,  content, lon, lat, data_dodania
             from gumtree_warszawa_pokoje 
             where cena <> "" and adres <> "" and dzielnica <> "" 
-            and content <> "" and lon <> "" and lat <> "" and data_dodania <> "" ') -> dane[[1]]
+            and content <> "" and lon <> "" and lat <> "" and data_dodania <> "" ') -> dane#[[1]]
  
-dbGetQuery(conn, 'select cena, adres, dzielnica,  content, lon, lat, data_dodania
-            from olx_warszawa_pokoje 
-            where cena <> "" and adres <> "" and dzielnica <> "" 
-            and content <> "" and lon <> "" and lat <> "" and data_dodania <> "" ') -> dane[[2]]
+ # dbGetQuery(conn, 'select cena, adres, dzielnica,  content, lon, lat, data_dodania
+ #            from olx_warszawa_pokoje 
+ #            where cena <> "" and adres <> "" and dzielnica <> "" 
+ #            and content <> "" and lon <> "" and lat <> "" and data_dodania <> "" ') -> dane[[2]]
+ # 
+ # dane <- do.call("rbind", dane) %>%
+ dane <- dane %>%
+   filter(cena != "NA") %>% 
+   mutate(cena = as.numeric(as.character(cena)),
+          data_dodania = as.Date(data_dodania),
+          lon = as.numeric(as.character(lon)),
+          lat = as.numeric(as.character(lat))) %>%
+   filter(cena > 200,
+          nchar(adres) > 2,
+          lat <= 52.368653,
+          lat >= 52.098673,
+          lon <= 21.282646,
+          lon >= 20.851555)
+   
  
-dane <- do.call("rbind", dane)
-dbDisconnect(conn)
+ dbDisconnect(conn)
 
 
 
