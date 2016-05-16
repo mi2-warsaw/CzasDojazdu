@@ -104,7 +104,7 @@ server <- function(input, output, session) {
     # czas <- as.integer(czas$minutes)
     # dane <- cbind(dane2(), czas)
     # dane<- dane %>% filter(czas <= input$czas_doj)
-    dane2() %>% nrow()
+    dane %>% nrow()
   })
     
 
