@@ -12,6 +12,15 @@ Dane udostępniane są pod adresem [http://mi2.mini.pw.edu.pl:3838/CzasDojazdu/d
 
 Kody dostępne są w folderze  `App/`. Aplikacja jest udostępniana pod adresem [https://mi2.mini.pw.edu.pl:3838/CzasDojazdu/App/](https://mi2.mini.pw.edu.pl:3838/CzasDojazdu/App/)
 
+## Dockery
+
+Dane pobierane są dzięki konteneryzacji. Instrukcje z konfiguracją Dockera uruchamiającego pobieranie danych 
+dostępne są w pliku Dockerfile.
+
+Aplikacja działa w obrazie Docker'a Shiny Server skonfigurowanego tutaj [https://github.com/mi2-warsaw/rocker/tree/master/shiny-extra](https://github.com/mi2-warsaw/rocker/tree/master/shiny-extra)
+
+O motywacji używania kontenerów Docker'a można przeczytać w tym wpisie na blogu [http://r-addict.com/2016/05/13/Docker-Motivation.html](http://r-addict.com/2016/05/13/Docker-Motivation.html)
+
 
 ### Autorzy
 
