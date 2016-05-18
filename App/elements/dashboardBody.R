@@ -18,7 +18,7 @@ dashboardBody <- dashboardBody(
         verbatimTextOutput("dane_debug"),
         div(HTML('<p> od wskazanej lokalizacji. Aplikacja korzysta z google maps API, która umożliwia sprawdzenie za darmo jedynie 2500 ogległości dziennie. 
         Prawdopodonnie aplikacja działa dla 20 osób dziennie. Pracujemy nad zwiększeniem potencjału aplikacji. Gdy widzisz komunikat: no such index at level 1 - oznacza to,
-        że dzienny limit póki co się wyczerpał dla wersji beta tej aplikacji</p>'),
+        że dzienny limit póki co się wyczerpał dla wersji beta tej aplikacji</p>')),
         leafletOutput("mymap" , height = 800)
       ),
       tabItem(
