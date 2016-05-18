@@ -113,7 +113,7 @@ dashboardBody <- dashboardBody(
       ),
       tabItem(
         "ludzie",
-                 box(
+                 box(width=4,
         div(HTML('
                 <center>
                 <img src="michal.jpg" align="center" width="150" height="150">
@@ -135,7 +135,7 @@ dashboardBody <- dashboardBody(
               </center>
             '))
         ),
-         box(
+         box(width=4,
         div(HTML('
                 <center>
                 <img src="aleksandra.jpg" align="center" width="150" height="150">
@@ -154,7 +154,7 @@ dashboardBody <- dashboardBody(
               </center>
             '))
         ),
-        box(
+        box(width=4,
         div(HTML('
                 <center>
                 <img src="tomasz.png" align="center" width="150" height="150">
@@ -176,7 +176,7 @@ dashboardBody <- dashboardBody(
               </center>
             '))
         ),
-        box(
+        box(width=6,
         div(HTML('
                 <center>
                 <img src="marcin.jpg" align="center" width="150" height="150">
@@ -200,10 +200,10 @@ dashboardBody <- dashboardBody(
               </center>
             '))
         ),
-        box(
+        box(width=6,
         div(HTML('
                 <center>
-                <img src="witek.jpg" align="center" width="150" height="150">
+                <img src="witek.jpeg" align="center" width="150" height="150">
                 <p style="font-size:15px; font-family:Verdana;"align="justify"><h4>Witold Chodor</h4></p>
                 <p style="font-size:15px; font-family:Verdana;"align="justify"><h5>Translations & Marketing</h5></p>
                 <a href="https://github.com/wchodor" style="font-size:2.0em;">
