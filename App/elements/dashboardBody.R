@@ -199,6 +199,24 @@ dashboardBody <- dashboardBody(
                 </a>
               </center>
             '))
+        ),
+        box(
+        div(HTML('
+                <center>
+                <img src="witek.jpg" align="center" width="150" height="150">
+                <p style="font-size:15px; font-family:Verdana;"align="justify"><h4>Witold Chodor</h4></p>
+                <p style="font-size:15px; font-family:Verdana;"align="justify"><h5>Translations & Marketing</h5></p>
+                <a href="https://github.com/wchodor" style="font-size:2.0em;">
+                  <i class="fa fa-git"></i>
+                </a>&nbsp;&nbsp;
+                <a href="https://www.linkedin.com/in/witold-chodor-691a94115" style="font-size:2.0em;">
+                  <i class="fa fa-linkedin"></i>
+                </a>&nbsp;&nbsp;
+                <a href="mailto:witoldchodor@gmail.com" style="font-size:2.0em;">
+                  <i class="fa fa-envelope-o"></i>
+                </a>
+              </center>
+            '))
         )
       )
       
