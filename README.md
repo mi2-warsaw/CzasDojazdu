@@ -28,3 +28,4 @@ O motywacji używania kontenerów Docker'a można przeczytać w tym wpisie na bl
 - Shiny Application Frontend & User Experience [@abrodecka](https://github.com/abrodecka)
 - Data Analysis & Visualizations [@mikolajjj](https://github.com/mikolajjj)
 - Critical Elements Sewing & Mail Forwarding & Dockerization [@MarcinKosinski](https://github.com/MarcinKosinski)
+- Translations & Marketing [@wchodor](https://github.com/wchodor)
