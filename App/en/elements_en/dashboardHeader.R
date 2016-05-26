@@ -29,54 +29,54 @@ dane <- list()
 
 
 dashboardHeader <- dashboardHeader(
-    title = "Pokoje a Czas Dojazdu",
+    title = "Rooms to let and commuting time",
     titleWidth = 300,
     dropdownMenu(
       type = "notifications",
       badgeStatus = "success",
       messageItem(
          from = nrow(dane),
-         message = "Ofert",
+         message = "Offers",
          icon = icon("photo")
       )
     ),
     dropdownMenu(
       type = "messages",
       messageItem(
-         from = "Projekt",
-         message = "Kliknij by przejść.",
+         from = "Project",
+         message = "Click to proceed",
          href = "https://github.com/mi2-warsaw/CzasDojazdu",
          icon = icon("git")
       ),
       messageItem(
-         from = "Dane",
-         message = "Aktualne na dzień",
+         from = "Data",
+         message = "Valid untill",
          icon = icon("calendar"),
          time = as.character(max(as.Date(dane$data_dodania)))
       ),
       messageItem(
          from = "Michał Cisek",
          href = "https://github.com/michalcisek",
-         message = "Kliknij by przejść na profil"
+         message = "Click to proceed on a profile"
       ),
       messageItem(
          from = "Aleksandra Brodecka",
          href = "https://github.com/abrodecka",
-         message = "Kliknij by przejść na profil"
+         message = "Click to proceed on a profile"
       ),
       messageItem(
          from = "Tomasz Mikołajczyk",
          href = "https://github.com/mikolajjj",
-         message = "Kliknij by przejść na profil"
+         message = "Click to proceed on a profile"
       ),
       messageItem(
          from = "Marcin Kosiński",
          href = "https://github.com/MarcinKosinski",
-         message = "Kliknij by przejść na profil"
+         message = "Click to proceed on a profile"
       ),
       messageItem(
-         from = "Zespół na GitHubie",
-         message = "Kliknij by przejść",
+         from = "GitHub team",
+         message = "Click to proceed",
          href = "https://github.com/orgs/mi2-warsaw/teams/wczasowicze",
          icon = icon("group")
       )
