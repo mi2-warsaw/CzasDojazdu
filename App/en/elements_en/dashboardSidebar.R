@@ -33,41 +33,41 @@ dashboardSidebar <-
   dashboardSidebar(
     sidebarMenu(
       menuItem(
-       "O projekcie",
+       "About a project",
        tabName = "info",
        icon = icon("info"),
        menuSubItem(
-         "Cel",
+         "Goal",
          tabName = "cel",
          icon = icon("trophy")
        ),
        menuSubItem(
-         "Ludzie",
+         "Co-authors",
          tabName = "ludzie",
          icon = icon("users")
        ),
        menuSubItem(
-         "Dane",
+         "Data",
          tabName = "dane",
          icon = icon("database")
        )
       ),
       menuItem(
-        "Pokoje",
+        "Rooms to let",
         tabName = "pokoje",
         icon = icon("graduation-cap"),
         badgeLabel = "new",
         badgeColor = "yellow"
       ),
       menuItem(
-        "Mieszkania",
+        "Apartments to let",
         tabName = "mieszkania",
         icon = icon("hotel"),
         badgeLabel = "TODO",
         badgeColor = "green"
       ),
       menuItem(
-        "Analizy",
+        "Analysis",
         tabName = "analizy",
         icon = icon("area-chart"),
         badgeLabel = "prototype",
@@ -82,12 +82,12 @@ dashboardSidebar <-
 #       ),
       textInput(
         "lokalizacja",
-        "Lokalizacja: ",
+        "Location : ",
         value = "Koszykowa 75"
       ),
      sliderInput(
        "czas_doj",
-       "Maksymalny czas dojazdu:",
+       "Maximum commuting time :",
        min = 0,
        max = 90,
        value= 30, 
@@ -95,13 +95,13 @@ dashboardSidebar <-
      ),
      selectInput(
        "srodek_trans",
-       "Środek transportu: ",
-       choices = c("Samochod" , "Rower" , "Pieszo"),
-       selected = "Samochod"
+       "Mode of transport : ",
+       choices = c("Car" , "Bike" , "On foot"),
+       selected = "Car"
      ),
      sliderInput(
        "cena",
-       "Zakres cenowy :",
+       "Price range :",
        min = 0,
        max = 4000,
        value=c(800,1500),
@@ -109,12 +109,12 @@ dashboardSidebar <-
      ),
      dateRangeInput(
        "data",
-       "Oferty z dni",
+       "Offers on the following days",
        min = as.character(Sys.Date() - 7),
        max = as.character(Sys.Date()),
        start = as.character(Sys.Date() - 3),
        end = as.character(Sys.Date())
      ),
-     actionButton("go", "Pokaż lokalizacje")
+     actionButton("go", "Show location")
     )
   )
