@@ -14,22 +14,25 @@ dashboardBody <- dashboardBody(
     tabItems(
       tabItem(
         "pokoje",
-        div(HTML('<p> Przy każdym kliknięciu \'Pokaż Lokalizacje\' sprawdzana jest odległość tylu dostępnych ofert </p>')),
+        div(HTML('<p> With every clik of \'Show location\' button, we have the following number of offers </p>')),
         verbatimTextOutput("dane_debug"),
-        div(HTML('<p> od wskazanej lokalizacji. Aplikacja korzysta z google maps API, która umożliwia sprawdzenie za darmo jedynie 2500 ogległości dziennie. 
-        Prawdopodonnie aplikacja działa dla 20 osób dziennie. Pracujemy nad zwiększeniem potencjału aplikacji. Gdy widzisz komunikat: no such index at level 1 - oznacza to,
-        że dzienny limit póki co się wyczerpał dla wersji beta tej aplikacji</p>')),
+        div(HTML('<p> from the chosen location. This aplication is making use of google maps Api which enables to check only 2500 distances free of charge per day. 
+The chances are that the aplication is working for 20 persons per day. We are working on increasing the potential of this aplication.
+When you notice such a message: no such index at level 1 - it means that you have run out of the daily limit for the beta version of this aplication.</p>')),
         leafletOutput("mymap" , height = 800)
       ),
       tabItem(
         "analizy",
-        div(HTML('<p> Jeżeli mapa się nie wyświetla, spróbuj dwukrotnie kliknąć w górny pasek przeglądarki, w celu wyśrodkowania mapy. </p>')),
+        # Ten komunikat nie jest dla mnie czytelny!
+        div(HTML('<p> If the map doesn\'t show up, you should try to clik twice on the upper browser bar in order to center the map.</p>')),
         includeHTML("../Rscripts/mapa/mapa.html")
       ),
       tabItem(
         "mieszkania",
         div(
-          HTML('<p style="font-size:18px; font-family:Verdana;"align="justify">Obecnie opcja wyszukiwania mieszkań nie jest dostępna, ale bardzo chętnie pomożemy ją dodać. Jeżeli chcesz dołączyć do autorów, przygotowując skrypty udostępniające te dane w oparciu <a href="https://github.com/mi2-warsaw/CzasDojazdu/tree/master/Rscripts/collect_data">o nasze kody</a>, daj znać!</p>')
+          HTML('<p style="font-size:18px; font-family:Verdana;"align="justify"> Seraching for apartments option is currently
+unavailable but we are willing to add it in the nearest future. If you want to join our team by preparing scripts, 
+making this data available based on <a href="https://github.com/mi2-warsaw/CzasDojazdu/tree/master/Rscripts/collect_data"> our source codes, then contact us immediately!</p>')
         )#,
         # div(id="disqus_thread",
         #     HTML("<script>
@@ -48,35 +51,36 @@ dashboardBody <- dashboardBody(
       tabItem(
         "cel",
         div(
-            HTML('<p style="font-size:32px; font-family:Verdana;"align="justify"><h2> O projekcie Czas Dojazdu</h2></p>'),
-            HTML('<p style="font-size:16px; font-family:Verdana;"align="justify">Aplikacja Czas Dojazdu umożliwia wyszukanie pokoi do wynajęcia, których czas dojazdu nie przekracza danych parametrów od wybranego miejsca. Informacje o pokojach pobierane są z popularnych portali z ogłoszeniami.</p>'),
-           
+            HTML('<p style="font-size:32px; font-family:Verdana;"align="justify"><h2> About a project Commuting Time </h2></p>'),
+            HTML('<p style="font-size:16px; font-family:Verdana;"align="justify"> Commuting time aplication enables to search for rooms to let
+which commuting time from the chosen location doesn\'t exceed the given parameters. The information about rooms are downloaded from the well-known web portals with announcements.</p>'),
+
             HTML('<img src="lokalizacja.jpg" alt="Opis" width="140" height="60" align = "left" >'),
-            HTML('<p style="font-size:15px; font-family:Verdana;"align="justify"> 1) Podaj lokalizację w Warszawie, do której chciałbyś dojechać.</p><br><br>'),
+            HTML('<p style="font-size:15px; font-family:Verdana;"align="justify"> 1) Give a location which you want to get to.</p><br><br>'),
             
             HTML('<img src="transport.jpg" alt="Opis" width="140" height="60" align = "left" >'),
-            HTML('<p style="font-size:15px; font-family:Verdana;"align="justify"> 2) Wybierz środek transportu.  Umożliwiamy 3 opcje: samochód,  rower oraz pieszo.</p><br><br>'),
+            HTML('<p style="font-size:15px; font-family:Verdana;"align="justify"> 2) Choose a mode of transport out of these three options: a car, a bike or on foot.</p><br><br>'),
             
             HTML('<img src="czas.jpg" alt="Opis" width="140" height="60" align = "left" >'),
-            HTML('<p style="font-size:15px; font-family:Verdana;"align="justify"> 3) Określ maksymalny czas dojazdu (w minutach).</p><br><br>'),
+            HTML('<p style="font-size:15px; font-family:Verdana;"align="justify"> 3) Determine a maximum commuting time (in minutes).</p><br><br>'),
             
             HTML('<img src="cena.jpg" alt="Opis" width="140" height="60" align = "left" >'),
-            HTML('<p style="font-size:15px; font-family:Verdana;"align="justify"> 4) Podaj zakres cenowy.</p><br><br>'),
+            HTML('<p style="font-size:15px; font-family:Verdana;"align="justify"> 4) Give a price range.</p><br><br>'),
             
             HTML('<img src="data.jpg" alt="Opis" width="140" height="60" align = "left" >'),
-            HTML('<p style="font-size:15px; font-family:Verdana;"align="justify"> 5) Sprecyzuj datę ogłoszeń. (Sugerujemy ostatnie 2-3 dni, ze względu na aktualność)</p><br><br>'),
+            HTML('<p style="font-size:15px; font-family:Verdana;"align="justify"> 5) Specify the date of the announcements. (We suggest the last 2-3 days to keep up to date)</p><br><br>'),
             
             HTML('<img src="pokaz.jpg" alt="Opis" width="140" height="60" align = "left" >'),
-            HTML('<p style="font-size:15px; font-family:Verdana;"align="justify">  6) Następnie kliknij w poniższy przycisk :) </p><br><br>'),
+            HTML('<p style="font-size:15px; font-family:Verdana;"align="justify">  6) Then clik on the button below :) </p><br><br>'),
             
             HTML('<img src="mapa.jpg" alt="Opis" width="140" height="60" align = "left" >'),
-            HTML('<p style="font-size:15px; font-family:Verdana;"align="justify">  7) Po przejściu do panelu Pokoje/Mieszkania, dostaniesz następujący wynik: zielony marker oznacza wskazaną przez Ciebie lokalizację, niebieski to oferty spełniające Twoje oczekiwania. </p><br>'),
+            HTML('<p style="font-size:15px; font-family:Verdana;"align="justify">  7) After choosing the Rooms/Apartments panel, you will get the following result: the green marker shows the chosen location, the blue one shows the offers that measure up to your expectations. </p><br>'),
             
             HTML('<img src="dokladnie.jpg" alt="Opis" width="140" height="60" align = "left" >'),
-            HTML('<p style="font-size:15px; font-family:Verdana;"align="justify">  8) Po kliknięciu na marker otrzymasz szczegółowe informacje odnośnie oferty: adres, link do ogłoszenia, cenę oraz wielkość.  </p><br><br>'),
+            HTML('<p style="font-size:15px; font-family:Verdana;"align="justify">  8) After clicking on the marker, you wil get detailed information about the offer: the link to the announcement, the address, the price and the size of the Room/Apartment. </p><br><br>'),
             
             
-            HTML('<p style="font-size:20px; font-family:Verdana;"align="justify">Jeżeli uważasz, że aplikację można poprawić, albo masz jakiekolwiek pytania bądź sugestie, proszę zostaw wiadomość w poniższym panelu.</p>'),
+            HTML('<p style="font-size:20px; font-family:Verdana;"align="justify"> If you think that the aplication needs some corrections or you have any questions or suggestions, please leave a message on the panel below.</p>'),
             style = 'max-width:1000px;width:98%;margin:auto;'),
             
         div(id="disqus_thread",
@@ -95,7 +99,7 @@ dashboardBody <- dashboardBody(
       ),
       tabItem(
         "dane",
-        div(HTML('<p> Tabela przedstawi dane spełniające wymagania sprecyzowane w lewym panelu, po kliknięciu \'Pokaż Lokalizacje\'. <a href="http://mi2.mini.pw.edu.pl:3838/CzasDojazdu/dane/">Pełne dane dostępne są tutaj.</a></p>')),
+        div(HTML('<p> The table shows the data which fulfil the requirements specified on the sidebar panel after clicking \'Show location\'. <a href="http://mi2.mini.pw.edu.pl:3838/CzasDojazdu/dane/"> The complete data are available here. </a></p>')),
         DT::dataTableOutput('content')#,
         # div(id="disqus_thread",
         #     HTML("<script>
