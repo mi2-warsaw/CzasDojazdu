@@ -25,7 +25,7 @@ When you notice such a message: no such index at level 1 - it means that you hav
         "analizy",
         # Ten komunikat nie jest dla mnie czytelny!
         div(HTML('<p> If the map doesn\'t show up, you should try to clik twice on the upper browser bar in order to center the map.</p>')),
-        includeHTML("../../Rscripts/mapa/mapa_en.html")
+        includeHTML("../Rscripts/mapa/mapa_en.html")
       ),
       tabItem(
         "mieszkania",

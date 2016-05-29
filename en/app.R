@@ -8,7 +8,7 @@ library(ggmap)
 library(stringi)
 library(RSQLite)
 
-conn <- dbConnect( dbDriver( "SQLite" ), "../../dane/czas_dojazdu.db" )
+conn <- dbConnect( dbDriver( "SQLite" ), "../dane/czas_dojazdu.db" )
 dane <- list()
  dbGetQuery(conn, 'select cena, adres, dzielnica,  content, lon, lat, data_dodania, link
             from gumtree_warszawa_pokoje 
