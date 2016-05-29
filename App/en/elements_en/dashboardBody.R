@@ -74,7 +74,7 @@ which commuting time from the chosen location doesn\'t exceed the given paramete
             HTML('<p style="font-size:15px; font-family:Verdana;"align="justify">  6) Then clik on the button below :) </p><br><br>'),
             
             HTML('<img src="mapa.jpg" alt="Opis" width="140" height="60" align = "left" >'),
-            HTML('<p style="font-size:15px; font-family:Verdana;"align="justify">  7) After choosing the Rooms/Apartments panel, you will get the following result: the green marker shows the chosen location, the blue one shows the offers that measure up to your expectations. </p><br>'),
+            HTML('<p style="font-size:15px; font-family:Verdana;"align="justify">  7) After choosing the Rooms/Apartments panel, you will get the following result: the green marker shows the chosen location, the blue one shows offers that measure up to your expectations. </p><br>'),
             
             HTML('<img src="dokladnie.jpg" alt="Opis" width="140" height="60" align = "left" >'),
             HTML('<p style="font-size:15px; font-family:Verdana;"align="justify">  8) After clicking on the marker, you wil get detailed information about the offer: the link to the announcement, the address, the price and the size of the Room/Apartment. </p><br><br>'),
