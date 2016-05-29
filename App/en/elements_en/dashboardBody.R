@@ -32,7 +32,7 @@ When you notice such a message: no such index at level 1 - it means that you hav
         div(
           HTML('<p style="font-size:18px; font-family:Verdana;"align="justify"> Seraching for apartments option is currently
 unavailable but we are willing to add it in the nearest future. If you want to join our team by preparing scripts, 
-making this data available based on <a href="https://github.com/mi2-warsaw/CzasDojazdu/tree/master/Rscripts/collect_data"> our source codes, then contact us immediately!</p>')
+making this data available based on <a href="https://github.com/mi2-warsaw/CzasDojazdu/tree/master/Rscripts/collect_data"> our source codes</a>, then contact us immediately!</p>')
         )#,
         # div(id="disqus_thread",
         #     HTML("<script>
@@ -52,14 +52,14 @@ making this data available based on <a href="https://github.com/mi2-warsaw/CzasD
         "cel",
         div(
             HTML('<p style="font-size:32px; font-family:Verdana;"align="justify"><h2> About a project Commuting Time </h2></p>'),
-            HTML('<p style="font-size:16px; font-family:Verdana;"align="justify"> Commuting time aplication enables to search for rooms to let
+            HTML('<p style="font-size:16px; font-family:Verdana;"align="justify"> Commuting time aplication enables to search for rooms to let,
 which commuting time from the chosen location doesn\'t exceed the given parameters. The information about rooms are downloaded from the well-known web portals with announcements.</p>'),
 
             HTML('<img src="lokalizacja.jpg" alt="Opis" width="140" height="60" align = "left" >'),
             HTML('<p style="font-size:15px; font-family:Verdana;"align="justify"> 1) Give a location which you want to get to.</p><br><br>'),
             
             HTML('<img src="transport.jpg" alt="Opis" width="140" height="60" align = "left" >'),
-            HTML('<p style="font-size:15px; font-family:Verdana;"align="justify"> 2) Choose a mode of transport out of these three options: a car, a bike or on foot.</p><br><br>'),
+            HTML('<p style="font-size:15px; font-family:Verdana;"align="justify"> 2) Choose a mode of transportation out of these three options: a car, a bike or on foot.</p><br><br>'),
             
             HTML('<img src="czas.jpg" alt="Opis" width="140" height="60" align = "left" >'),
             HTML('<p style="font-size:15px; font-family:Verdana;"align="justify"> 3) Determine a maximum commuting time (in minutes).</p><br><br>'),
