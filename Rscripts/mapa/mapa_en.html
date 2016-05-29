@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Commuting time</title>
+	<meta charset="utf-8" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+
+	<style>
+		#map {
+			width: 800px;
+			height: 800px;
+		}
+
+		.info {
+			padding: 10px 10px;
+			font: 18px/18px Arial, Helvetica, sans-serif;
+			background: white;
+			background: rgba(255,255,255,0.8);
+			box-shadow: 0 0 15px rgba(0,0,0,0.2);
+			border-radius: 5px;
+		}
+		.info h4 {
+			font: 20px;
+			margin: 0 0 5px;
+			color: #777;
+		}
+
+		.legend {
+			text-align: left;
+			line-height: 18px;
+			color: #555;
+			font-size: 12px;
+			font-weight: 700;
+		}
+		.legend i {
+			width: 18px;
+			height: 18px;
+			float: left;
+			margin-right: 8px;
+			opacity: 0.7;
+		}
+	</style>
+</head>
+<body>
+	<div id="map"></div>
+
+	<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+
+	<script type="text/javascript" src="dzielnice.js"></script>
+	<script type="text/javascript">
+
+		var map = L.map('map').setView([52.229836, 21.011721], 11);
+
+		L.tileLayer('https://api.mapbox.com/styles/v1/mikolajjj/cio2o8hkk001lbzm1tq5kqm03/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWlrb2xhampqIiwiYSI6ImJNdzhwYXMifQ.mpSuPyN03MZ60mUK48Ydfg', {
+		// L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
+			maxZoom: 18,
+			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+				'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+				'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+			id: 'mapbox.light'
+		}).addTo(map);
+
+
+		// control that shows state info on hover
+		var info = L.control();
+
+		info.onAdd = function (map) {
+			this._div = L.DomUtil.create('div', 'info');
+			this.update();
+			return this._div;
+		};
+
+		info.update = function (props) {
+			this._div.innerHTML = '<h4>Mean rental prices of rooms</h4>' +  (props ?
+				'<b>' + props.name + '</b><br />' + props.density + ' zł'
+				: 'Select the district with your mouse');
+		};
+
+		info.addTo(map);
+
+
+		// get color depending on population density value
+		// to oczywiście należałoby ofunkcjonować
+		function getColor(d) {
+			return d > 890 ? '#d7191c' :
+			       d > 811  ? '#fdae61' :
+			       d > 772   ? '#ffffbf' :
+			       d > 720   ? '#a6d96a' :
+			                  '#1a9641';
+		}
+
+		function style(feature) {
+			return {
+				weight: 2,
+				opacity: 0.85,
+				color: 'grey',
+				dashArray: '3',
+				fillOpacity: 0.8,
+				fillColor: getColor(feature.properties.density)
+			};
+		}
+
+		function highlightFeature(e) {
+			var layer = e.target;
+
+			layer.setStyle({
+				weight: 3.5,
+				color: '#666',
+				dashArray: '',
+				fillOpacity: 0.7
+			});
+
+			if (!L.Browser.ie && !L.Browser.opera) {
+				layer.bringToFront();
+			}
+
+			info.update(layer.feature.properties);
+		}
+
+		var geojson;
+
+		function resetHighlight(e) {
+			geojson.resetStyle(e.target);
+			info.update();
+		}
+
+		function zoomToFeature(e) {
+			map.fitBounds(e.target.getBounds());
+		}
+
+		function onEachFeature(feature, layer) {
+			layer.on({
+				mouseover: highlightFeature,
+				mouseout: resetHighlight,
+				click: zoomToFeature
+			});
+		}
+
+		geojson = L.geoJson(statesData, {
+			style: style,
+			onEachFeature: onEachFeature
+		}).addTo(map);
+
+		map.attributionControl.addAttribution('Wszystkie prawa &copy; <a href="https://github.com/mi2-warsaw/CzasDojazdu">Czas Dojazdu</a>');
+
+
+		var legend = L.control({position: 'bottomright'});
+
+		legend.onAdd = function (map) {
+
+			var div = L.DomUtil.create('div', 'info legend'),
+				grades = [0, 720, 772, 811, 890],
+				labels = [],
+				from, to;
+
+			for (var i = 0; i < grades.length; i++) {
+				from = grades[i];
+				to = grades[i + 1];
+
+				labels.push(
+					'<i style="background:' + getColor(from + 1) + '"></i> ' +
+					from + (to ? '&ndash;' + to : '+'));
+			}
+
+			div.innerHTML = labels.join('<br>');
+			return div;
+		};
+
+		legend.addTo(map);
+
+	</script>
+</body>
+</html>
