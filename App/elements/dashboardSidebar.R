@@ -115,6 +115,7 @@ dashboardSidebar <-
        start = as.character(Sys.Date() - 3),
        end = as.character(Sys.Date())
      ),
-     actionButton("go", "Pokaż lokalizacje")
+     actionButton("go", "Pokaż lokalizacje"),
+     div(HTML('<p style="font-size:28px; font-family:Verdana;"align="justify"><strong><a href="http://mi2.mini.pw.edu.pl:3838/CzasDojazdu/App/en/">English Version </a></strong>'))
     )
   )
