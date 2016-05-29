@@ -29,8 +29,8 @@ dane <- list()
 
 
 dashboardHeader <- dashboardHeader(
-    title = "Rooms to let and commuting time",
-    titleWidth = 300,
+    title = "Commuting time of rooms to let",
+    titleWidth = 350,
     dropdownMenu(
       type = "notifications",
       badgeStatus = "success",
