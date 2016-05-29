@@ -1,4 +1,4 @@
-conn <- dbConnect( dbDriver( "SQLite" ), "../dane/czas_dojazdu.db" )
+conn <- dbConnect( dbDriver( "SQLite" ), "../../dane/czas_dojazdu.db" )
 dane <- list()
  dbGetQuery(conn, 'select cena, adres, dzielnica,  content, lon, lat, data_dodania
             from gumtree_warszawa_pokoje 
