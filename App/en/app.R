@@ -122,12 +122,12 @@ server <- function(input, output, session) {
   output$mymap <- renderLeaflet({
     
     content_lok <- paste( sep = "<br/>", 
-                          "Twoja lokalizacja", 
+                          "Your location", 
                           input$lokalizacja)    
     geocode <- geocode(paste("Warszawa", input$lokalizacja))
     
-    blue = "blue.png"
-    green = "green.png"
+    blue = "blue_en.png"
+    green = "green_en.png"
     
     if (v$doPlot == FALSE) { 
       leaflet() %>%
