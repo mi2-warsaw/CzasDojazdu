@@ -95,7 +95,7 @@ dashboardSidebar <-
      ),
      selectInput(
        "srodek_trans",
-       "Mode of transport : ",
+       "Mode of transportation : ",
        choices = c("Car" , "Bike" , "On foot"),
        selected = "Car"
      ),
