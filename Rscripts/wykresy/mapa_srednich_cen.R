@@ -2,30 +2,53 @@ library(ggthemes)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
-
+library(RSQLite)
 load("dane/dane_df.rda")
 
-# przypisanie dzielnic do przedziałów cen wynajmu
-inputData$cena <- as.numeric(inputData$cena)
-inputData %>%
-  filter(cena != "") %>%
-  filter(cena >= quantile(cena, probs = 0.25) &
-           cena <= quantile(cena, probs = 0.95)) %>%
-  # filter(!cena %in% boxplot.stats(cena)$out) %>%
+
+conn <- dbConnect( dbDriver( "SQLite" ), "dane/czas_dojazdu.db" )
+dbGetQuery(conn, 'select cena, adres, dzielnica,  content, lon, lat, data_dodania, link
+            from gumtree_warszawa_pokoje 
+            where cena <> "" and adres <> "" and dzielnica <> "" 
+            and content <> "" and lon <> "" and lat <> "" and data_dodania <> "" ') -> dane
+
+dbDisconnect(conn)
+
+dane %>%
+   filter(cena != "NA",
+          cena != "") %>% 
+   mutate(cena = as.numeric(as.character(cena)),
+          data_dodania = as.Date(data_dodania),
+          lon = as.numeric(as.character(lon)),
+          lat = as.numeric(as.character(lat)),
+          link = as.character(link)) %>%
+   filter(cena > 200,
+          cena < 5000,
+          nchar(adres) > 2,
+          lat <= 52.368653,
+          lat >= 52.098673,
+          lon <= 21.282646,
+          lon >= 20.851555) %>%
+   group_by(adres) %>%
+   top_n(1, -cena) %>%
+   top_n(1, link) %>%
+   ungroup %>%
   mutate(dzielnica = ifelse(dzielnica == "Praga Północ", "Praga-Północ", dzielnica)) %>%
   mutate(dzielnica = ifelse(dzielnica == "Praga Południe", "Praga-Południe", dzielnica)) %>%
-  mutate(cena = as.numeric(cena)) %>%
   group_by(dzielnica) %>%
-  summarise(min_cena = min(cena),
-            max_cena = max(cena),
-            sr_cena = mean(cena),
+  summarise(min_cena = min(cena, na.rm = TRUE),
+            max_cena = max(cena, na.rm = TRUE),
+            sr_cena = mean(cena, na.rm = TRUE),
             count = n()) %>%
-  ungroup() %>%
+  ungroup() -> przed_pocieciem
+przed_pocieciem %>%
   mutate(sr_cena_cut = cut(sr_cena,
-                           round(quantile(sr_cena, probs = seq(0,1,0.25)),-1),
+                           round(quantile(przed_pocieciem$sr_cena,
+                                          probs = seq(0,1,0.25)),-1),
                            include.lowest = TRUE,
-                           dig.lab = 4)) %>%
-  filter(dzielnica %in% unique(dane.df$dzielnica)) -> przedzialy_cenowe
+                           dig.lab = 4)) -> przedzialy_cenowe
+# przez zaokraglenia najnizsza wartosc wypada
+przedzialy_cenowe[is.na(unlist(przedzialy_cenowe[, 6])), 6] <- levels(unique(unlist(przedzialy_cenowe[,6])))[1]
 
 # Rysowanie mapy ----------------------------------------------------------
 
@@ -34,27 +57,35 @@ etykieta_pozycja <- aggregate(cbind(long, lat) ~ dzielnica,
                               data = dane.df, FUN = function(x) mean(range(x)))
 colnames(etykieta_pozycja) <- c("dzielnica", "long2", "lat2")
 
-dane <- przedzialy_cenowe %>%
+dane2 <- przedzialy_cenowe %>%
   left_join(etykieta_pozycja, by = "dzielnica") %>%
   mutate(etykieta = paste0(dzielnica, "\n", "(", round(sr_cena,-1), ")"))
 
-dane$etykieta <- gsub("-", "-\n", dane$etykieta)
-dane$etykieta_cena <- gsub(",", " - ", dane$sr_cena_cut)
-dane$etykieta_cena <- gsub("\\]", "", dane$etykieta_cena)
-dane$etykieta_cena <- gsub("\\(", "", dane$etykieta_cena)
-dane$etykieta_cena <- gsub("\\[[0-9]+ -", "do", dane$etykieta_cena)
+dane2$etykieta <- gsub("-", "-\n", dane2$etykieta)
+dane2$etykieta_cena <- gsub(",", " - ", dane2$sr_cena_cut)
+dane2$etykieta_cena <- gsub("\\]", "", dane2$etykieta_cena)
+dane2$etykieta_cena <- gsub("\\(", "", dane2$etykieta_cena)
+dane2$etykieta_cena <- gsub("\\[[0-9]+ -", "do", dane2$etykieta_cena)
 
 # ustawienie kolejności poziomów czynnika
-dane$etykieta_cena <- factor(dane$etykieta_cena, levels = dane$etykieta_cena[order(dane$sr_cena_cut)])
+dane2$etykieta_cena <- factor(dane2$etykieta_cena, levels = dane2$etykieta_cena[order(dane2$sr_cena_cut)])
+
 
 dane.df %>%
-  left_join(dane, by = "dzielnica")  %>%
-  ggplot(aes(long, lat, group = group, fill = etykieta_cena)) + 
+  left_join(dane2, by = "dzielnica")  -> dane2plot
+# 
+# etykieta_pozycja %>%
+#   left_join(dane2plot, by = "dzielnica") %>% head
+#   select(dzielnica, long2, lat2, etykieta) %>% 
+#   unique -> dane_etykiety
+
+dane2plot %>%
+  ggplot(aes(long, lat, group = group, fill = etykieta_cena, label=etykieta)) + 
   geom_polygon(aes(group = group)) +
   geom_path(color = "grey") +
   coord_equal() +
   theme_bw() +
-  scale_fill_tableau(name="Przedziały cen") +
+  scale_fill_tableau(name="Przedziały cen w zł") +
   theme(axis.ticks = element_blank(), 
         axis.text.x = element_blank(),
         axis.text.y = element_blank(),
@@ -63,7 +94,12 @@ dane.df %>%
         panel.border = element_blank(),
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
-        legend.key = element_blank()) +
-  ggtitle("Średnie ceny wynajmu mieszkań w dzielnicach Warszawy")
-# + geom_text(data = dane, aes(long2, lat2, label = etykieta), size = 4)
+        legend.key = element_blank(),
+        legend.position="top") +
+  ggtitle("Średnie ceny wynajmu mieszkań w dzielnicach Warszawy") +
+  annotate("text", x = dane2plot$long2, y = dane2plot$lat2,
+            label = dane2plot$etykieta, size = 4) ->  mapa_wykres
+
+save(mapa_wykres, file = "mapa_wykres.rda")
+
 
