@@ -21,3 +21,4 @@ vignettes/*.pdf
 
 # dane
 dane/czas_dojazdu.db
+mapa_wykres.rda
