@@ -95,6 +95,16 @@ scrapuj <- function (x, slownik, miasto = "Warszawa") {
     html_text() -> dzielnica
   if(length(dzielnica)==0) dzielnica<-""
   
+  # liczba pokoi
+  web %>%
+    html_nodes('li:nth-child(6) .value') %>%
+    html_text() -> pokoje
+  # liczba lazienek
+  web %>%
+    html_nodes('li:nth-child(7) .value') %>%
+    html_text() -> lazienki
+  
+  
   # data dodania
   web %>%
     html_nodes("li:nth-child(1) .value") %>%
@@ -114,28 +124,31 @@ scrapuj <- function (x, slownik, miasto = "Warszawa") {
   
   return(list(cena = cena, wielkosc = wielkosc, #telefon = telefon,
               opis = opis, link_do_zdj = link_do_zdj, adres = adres,
+              pokoje = pokoje, lazienki = lazienki,
               dzielnica=dzielnica, data_dodania = data_dodania,
               link=x, content = content, lon = wspolrzedne$lon, lat = wspolrzedne$lat))
   }, error = function(e){
     return(list(cena = NA, wielkosc = NA, #telefon = telefon,
               opis = NA, link_do_zdj = NA, adres = NA,
+              pokoje = pokoje, lazienki = lazienki,
               dzielnica = NA, data_dodania = NA,
               link = x, content = NA, lon = NA, lat = NA))
   })
 }
 
 
-tworz_gumtree_pokoje <- function(polaczenie) {
-  gumtree_warszawa_pokoje <- data.frame(cena = "", wielkosc = "", #telefon = "", 
+tworz_gumtree_mieszkania <- function(polaczenie) {
+  gumtree_warszawa_mieszkania <- data.frame(cena = "", wielkosc = "", #telefon = "", 
                                         opis = "", link_do_zdj = "" , adres = "",
+                                        pokoje = "", lazienki = "",
                                         dzielnica = "", data_dodania="", link="" ,
                                         content = "", lon = "", lat = "",
                                         stringsAsFactors = FALSE)
   # 
   # polaczenie <- dbConnect( dbDriver( "SQLite" ), "dane/czas_dojazdu.db" )
   
-  dbWriteTable(polaczenie, name = "gumtree_warszawa_pokoje",
-               gumtree_warszawa_pokoje, overwrite = TRUE, row.names = FALSE)  
+  dbWriteTable(polaczenie, name = "gumtree_warszawa_mieszkania",
+               gumtree_warszawa_mieszkania, overwrite = TRUE, row.names = FALSE)  
 }
 
 # 
@@ -144,8 +157,8 @@ tworz_gumtree_pokoje <- function(polaczenie) {
 # }
 
 polaczenie <- dbConnect( dbDriver( "SQLite" ), "dane/czas_dojazdu.db" )
-if (!("gumtree_warszawa_pokoje" %in% dbListTables(polaczenie))){
-  tworz_gumtree_pokoje(polaczenie)
+if (!("gumtree_warszawa_mieszkania" %in% dbListTables(polaczenie))){
+  tworz_gumtree_mieszkania(polaczenie)
 }
 
 # Zmienne startowe --------------------------------------------------------
@@ -154,10 +167,10 @@ liczba_stron<-5
 
 # Scrapowanie -------------------------------------------------------------
 
-linki <- paste('http://www.gumtree.pl/s-pokoje-do-wynajecia/warszawa/v1c9000l3200008p',1:liczba_stron,sep="")
+linki <- paste('http://www.gumtree.pl/s-mieszkania-i-domy-do-wynajecia/warszawa/v1c9008l3200008p',1:liczba_stron,sep="")
 adresy<-c(pbsapply(linki,aktualne_oferty))
 
-adresydb<- as.vector(as.matrix(dbGetQuery(polaczenie,"select link from gumtree_warszawa_pokoje")))
+adresydb<- as.vector(as.matrix(dbGetQuery(polaczenie,"select link from gumtree_warszawa_mieszkania")))
 adresy<-adresy[!(adresy %in% adresydb)]
 
 
@@ -174,11 +187,12 @@ zap<-c()
 for (i in seq_along(dane)){
   zap[i]<-paste("('",dane[[i]]$cena,"','",dane[[i]]$wielkosc,"','",#dane[[i]]$telefon,"','",
                 dane[[i]]$opis,"','",dane[[i]]$link_do_zdj,"','",
-                dane[[i]]$adres,"','", dane[[i]]$dzielnica, "','", dane[[i]]$data_dodania,"','",dane[[i]]$link,
+                dane[[i]]$adres,"','", dane[[i]]$pokoje,"','", dane[[i]]$lazienki,"','", dane[[i]]$dzielnica, "','",
+                dane[[i]]$data_dodania,"','",dane[[i]]$link,
                 "','", dane[[i]]$content, "','", dane[[i]]$lon, "','", dane[[i]]$lat ,"')",collapse="",sep="")
 }
 
-insert<-paste0("INSERT INTO gumtree_warszawa_pokoje (cena,wielkosc,opis,link_do_zdj,adres,dzielnica,data_dodania,link, content, lon, lat) VALUES ",paste(zap,collapse=","))
+insert<-paste0("INSERT INTO gumtree_warszawa_mieszkania (cena,wielkosc,opis,link_do_zdj,adres,pokoje,lazienki,dzielnica,data_dodania,link, content, lon, lat) VALUES ",paste(zap,collapse=","))
 
 dbGetQuery(polaczenie,insert)
 
