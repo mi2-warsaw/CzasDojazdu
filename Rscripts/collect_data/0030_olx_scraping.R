@@ -190,6 +190,13 @@ if (length(adresy)>0) {
 
 dane<-lapply(adresy,scrapuj, slownik = slownik)
 
+keys<-c("szukam", "Szukam", "Poszukuje", "poszukuje", "Poszukuję", "poszukuję")
+fake<-c()
+for ( i in seq_along(dane)){
+  opis<-dane[[i]]$opis
+  ifelse(grepl(paste(keys,collapse="|"),opis)==T,fake[length(fake)+1]<-i,next)  
+}
+dane[fake]<-NULL
 
 # Wgrywanie danych do DB --------------------------------------------------
 zap<-c()
