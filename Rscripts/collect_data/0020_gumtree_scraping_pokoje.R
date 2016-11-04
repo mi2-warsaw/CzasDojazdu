@@ -319,7 +319,7 @@ if (length(adresy) > 0) {
         sep = ""
       )
   }
-  # dbGetQuery(polaczenie, "ALTER TABLE gumtree_warszawa_pokoje ADD dostepny char")
+
   insert <-
     paste0(
       "INSERT INTO gumtree_warszawa_pokoje (link, cena, opis, adres, link_do_zdj, lon, lat, data_dodania, dostepny, do_wynajecia_przez, liczba_pokoi, dzielnica, palacy, preferowana_plec, przyjazne_zwierzakom, rodzaj_nieruchomosci, wielkosc, wspoldzielenie, content) VALUES ", paste(zap, collapse = ",")
