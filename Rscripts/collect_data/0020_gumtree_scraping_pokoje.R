@@ -1,7 +1,7 @@
 source('Rscripts/inne/ulice/adres_z_opisu.R')
 slownik <-
   data.table::fread(
-    'warszawskie_ulice.txt', encoding = "UTF-8", data.table = FALSE
+    'dicts/warszawskie_ulice.txt', encoding = "UTF-8", data.table = FALSE
   ) %>%
   unlist() %>%
   unname()
@@ -171,7 +171,7 @@ scrapuj <-
         ) %>%
         lapply(
           function(x) {
-            ifelse(is.null(x), "", no = x)
+            ifelse(is.null(x), "", x)
           }
         )
       
@@ -203,7 +203,6 @@ scrapuj <-
       )
     })
   }
-
 
 tworz_gumtree_pokoje <-
   function(polaczenie) {
@@ -237,7 +236,7 @@ tworz_gumtree_pokoje <-
     dbWriteTable(
       polaczenie, name = "gumtree_warszawa_pokoje", gumtree_warszawa_pokoje,
       overwrite = TRUE, row.names = FALSE
-    )  
+    )
   }
 
 # if (!file.exists("dane/czas_dojazdu.db")){
@@ -255,16 +254,15 @@ liczba_stron <- 5
 
 # Scrapowanie -------------------------------------------------------------
 
-linki <- paste(
+linki <- paste0(
   'http://www.gumtree.pl/s-pokoje-do-wynajecia/warszawa/v1c9000l3200008p',
-  1:liczba_stron,
-  sep = ""
+  1:liczba_stron
 )
 
 adresy <- c(pbsapply(linki, aktualne_oferty))
 
 adresydb <-
-  dbGetQuery(polaczenie, "select link from gumtree_warszawa_pokoje") %>%
+  dbGetQuery(polaczenie, "SELECT link FROM gumtree_warszawa_pokoje") %>%
   .$link
 
 adresy <- adresy[!(adresy %in% adresydb)]
@@ -322,13 +320,16 @@ if (length(adresy) > 0) {
 
   insert <-
     paste0(
-      "INSERT INTO gumtree_warszawa_pokoje (link, cena, opis, adres, link_do_zdj, lon, lat, data_dodania, dostepny, do_wynajecia_przez, liczba_pokoi, dzielnica, palacy, preferowana_plec, przyjazne_zwierzakom, rodzaj_nieruchomosci, wielkosc, wspoldzielenie, content) VALUES ", paste(zap, collapse = ",")
+      "INSERT INTO gumtree_warszawa_pokoje (",
+      lista %>% names() %>% paste0(collapse = ","),
+      ") VALUES ",
+      paste(zap, collapse = ",")
     )
   
   dbGetQuery(polaczenie, insert)
   
   # mala obczajka jakie sa potencjalne adresy
-  # dbGetQuery(polaczenie, "select * from gumtree_warszawa_pokoje") -> adresy_w_bazce
+  # dbGetQuery(polaczenie, "SELECT * FROM gumtree_warszawa_pokoje") -> adresy_w_bazce
   # repair_encoding(adresy_w_bazce$adres, from = "UTF-8")
 }
 dbDisconnect(polaczenie)
