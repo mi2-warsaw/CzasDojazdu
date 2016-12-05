@@ -24,6 +24,7 @@ O motywacji używania kontenerów Docker'a można przeczytać w tym wpisie na bl
 
 ### Autorzy
 
+- Maintaining & Testing & Code Review & Refactoring [@krzyslom](https://github.com/krzyslom)
 - Web Harvesting & Data Management [@michalcisek](https://github.com/michalcisek)
 - Shiny Application Frontend & User Experience [@abrodecka](https://github.com/abrodecka)
 - Data Analysis & Visualizations [@mikolajjj](https://github.com/mikolajjj)

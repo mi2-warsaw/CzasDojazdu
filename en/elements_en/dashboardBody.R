@@ -180,7 +180,7 @@ which commuting time from the chosen location doesn\'t exceed the given paramete
               </center>
             '))
         ),
-        box(width=6,
+        box(width=4,
         div(HTML('
                 <center>
                 <img src="marcin.jpg" align="center" width="150" height="150">
@@ -204,7 +204,7 @@ which commuting time from the chosen location doesn\'t exceed the given paramete
               </center>
             '))
         ),
-        box(width=6,
+        box(width=4,
         div(HTML('
                 <center>
                 <img src="witek.jpeg" align="center" width="150" height="150">
@@ -217,6 +217,27 @@ which commuting time from the chosen location doesn\'t exceed the given paramete
                   <i class="fa fa-linkedin"></i>
                 </a>&nbsp;&nbsp;
                 <a href="mailto:witoldchodor@gmail.com" style="font-size:2.0em;">
+                  <i class="fa fa-envelope-o"></i>
+                </a>
+              </center>
+            '))
+        ),
+        box(width=4,
+        div(HTML('
+                <center>
+                <img src="krzysztof.png" align="center" width="120" height="150">
+                <p style="font-size:15px; font-family:Verdana;"align="justify"><h4>Krzysztof Słomczyński</h4></p>
+                <p style="font-size:15px; font-family:Verdana;"align="justify"><h5>Maintaining & Testing & Refactoring</h5></p>
+                <a href="https://github.com/krzyslom" style="font-size:2.0em;">
+                  <i class="fa fa-git"></i>
+                </a>&nbsp;&nbsp;
+                <a href="https://www.linkedin.com/in/krzysztof-słomczyński-20a364134" style="font-size:2.0em;">
+                  <i class="fa fa-linkedin"></i>
+                </a>&nbsp;&nbsp;
+                <a href="http://stackoverflow.com/users/6295945/krzyslom" style="font-size:2.0em;">
+                  <i class="fa fa-stack-overflow"></i>
+                </a>&nbsp;&nbsp;
+                <a href="mailto:krzysztofslomczynski@gmail.com" style="font-size:2.0em;">
                   <i class="fa fa-envelope-o"></i>
                 </a>
               </center>
