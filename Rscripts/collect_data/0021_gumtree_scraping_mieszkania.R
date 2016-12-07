@@ -1,6 +1,6 @@
 source('Rscripts/inne/ulice/adres_z_opisu.R')
 slownik <-
-  data.table::fread(
+  fread(
     'dicts/warszawskie_ulice.txt', encoding = "UTF-8", data.table = FALSE
   ) %>%
   unlist() %>%
@@ -16,7 +16,7 @@ aktualne_oferty <-
     
     # usunięcie trzech pierwszych ofert, które są sponsorowane i z każdym
     # odświeżeniem ulegają zmianie
-    linki <- linki[-c(1,2,3)]
+    linki <- linki[-(1:3)]
     return(linki)
   }
 
@@ -96,7 +96,7 @@ scrapuj <-
       if(length(link_do_zdj) == 0) link_do_zdj <- ""
       
       # wspolrzedne
-      ggmap::geocode(paste(adres, miasto)) -> wspolrzedne
+      geocode(paste(adres, miasto)) -> wspolrzedne
       
       # atrybuty oferty
       c(".name", ".attribute .value") %>%
@@ -234,7 +234,7 @@ tworz_gumtree_mieszkania <-
     # polaczenie <- dbConnect(dbDriver("SQLite"), "dane/czas_dojazdu.db")
     
     dbWriteTable(
-      polaczenie, name = "gumtree_warszawa_mieszkania",
+      polaczenie, "gumtree_warszawa_mieszkania_02",
       gumtree_warszawa_mieszkania, overwrite = TRUE, row.names = FALSE
     )
   }
@@ -244,7 +244,7 @@ tworz_gumtree_mieszkania <-
 # }
 
 polaczenie <- dbConnect(dbDriver("SQLite"), "dane/czas_dojazdu.db")
-if (!("gumtree_warszawa_mieszkania" %in% dbListTables(polaczenie))) {
+if (!("gumtree_warszawa_mieszkania_02" %in% dbListTables(polaczenie))) {
   tworz_gumtree_mieszkania(polaczenie)
 }
 
@@ -259,16 +259,16 @@ linki <- paste0(
   1:liczba_stron
 )
 
-adresy <- c(pbsapply(linki, aktualne_oferty))
+adresy <- linki %>% pbsapply(aktualne_oferty) %>% c()
 
 adresydb <-
-  dbGetQuery(polaczenie, "SELECT link FROM gumtree_warszawa_mieszkania") %>%
+  dbGetQuery(polaczenie, "SELECT link FROM gumtree_warszawa_mieszkania_02") %>%
   .$link
 
 adresy <- adresy[!(adresy %in% adresydb)]
 
 if (length(adresy) > 0) {
-  dane <- pblapply(adresy, scrapuj, slownik = slownik)
+  dane <- adresy %>% pblapply(scrapuj, slownik = slownik)
   
   keys <- c("szukam", "poszukuj[eę]")
   fake <- c()
@@ -288,7 +288,7 @@ if (length(adresy) > 0) {
   
   # Wgrywanie danych do DB --------------------------------------------------
   zap <- c()
-  for (i in seq_along(dane)){
+  for (i in seq_along(dane)) {
     zap[i] <-
       paste(
         "('",
@@ -320,8 +320,8 @@ if (length(adresy) > 0) {
   
   insert <-
     paste0(
-      "INSERT INTO gumtree_warszawa_mieszkania (",
-      lista %>% names() %>% paste0(collapse = ","),
+      "INSERT INTO gumtree_warszawa_mieszkania_02 (",
+      dane[[1]] %>% names() %>% paste0(collapse = ","),
       ") VALUES ",
       paste(zap, collapse = ",")
     )
@@ -329,7 +329,7 @@ if (length(adresy) > 0) {
   dbGetQuery(polaczenie, insert)
   
   # mala obczajka jakie sa potencjalne adresy
-  # dbGetQuery(polaczenie, "SELECT * FROM gumtree_warszawa_mieszkania") -> adresy_w_bazce
+  # dbGetQuery(polaczenie, "SELECT * FROM gumtree_warszawa_mieszkania_02") -> adresy_w_bazce
   # repair_encoding(adresy_w_bazce$adres, from = "UTF-8")
 }
 dbDisconnect(polaczenie)
