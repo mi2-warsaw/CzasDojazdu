@@ -8,12 +8,12 @@ library(ggmap)
 library(stringi)
 library(RSQLite)
 
-conn <- dbConnect( dbDriver( "SQLite" ), "../dane/czas_dojazdu.db" )
+conn <- dbConnect(dbDriver("SQLite"), "../dane/czas_dojazdu.db")
 dane <- list()
- dbGetQuery(conn, 'select cena, adres, dzielnica,  content, lon, lat, data_dodania, link
-            from gumtree_warszawa_pokoje 
-            where cena <> "" and adres <> "" and dzielnica <> "" 
-            and content <> "" and lon <> "" and lat <> "" and data_dodania <> "" ') -> dane#[[1]]
+ dbGetQuery(conn, 'SELECT cena, adres, dzielnica,  content, lon, lat, data_dodania, link
+            FROM gumtree_warszawa_pokoje_02
+            WHERE cena <> "" and adres <> "" and dzielnica <> "" 
+            AND content <> "" and lon <> "" and lat <> "" and data_dodania <> "" ') -> dane#[[1]]
  
  # dbGetQuery(conn, 'select cena, adres, dzielnica,  content, lon, lat, data_dodania
  #            from olx_warszawa_pokoje 
