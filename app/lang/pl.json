@@ -1,0 +1,74 @@
+{
+  "body": {
+    "rooms": {
+      "1": ["Przy każdym kliknięciu '"],
+      "2": ["' sprawdzana jest odległość tylu dostępnych ofert: "],
+      "3": [" od wskazanej lokalizacji. Aplikacja korzysta z google maps API,\n            która umożliwia sprawdzenie za darmo jedynie 2500 odległości\n            dziennie. Prawdopodonnie aplikacja działa dla 20 osób dziennie.\n            Pracujemy nad zwiększeniem potencjału aplikacji. Gdy widzisz\n            komunikat: no such index at level 1 - oznacza to, że dzienny limit\n            póki co się wyczerpał dla wersji beta tej aplikacji."]
+    },
+    "analysis": ["Jeżeli mapa się nie wyświetla, spróbuj dwukrotnie kliknąć w\n                górny pasek przeglądarki, w celu wyśrodkowania mapy."],
+    "apartments": {
+      "1": ["Obecnie opcja wyszukiwania mieszkań nie jest dostępna, ale bardzo\n            chętnie pomożemy ją dodać. Jeżeli chcesz dołączyć do autorów,\n            przygotowując skrypty udostępniające te dane w oparciu o"],
+      "2": ["nasze kody"],
+      "3": [", daj znać!"]
+    },
+    "about": {
+      "header": ["O projekcie Czas Dojazdu"],
+      "paragraph": ["Aplikacja Czas Dojazdu umożliwia wyszukanie pokoi do\n                    wynajęcia, których czas dojazdu nie przekracza danych\n                    parametrów od wybranego miejsca. Informacje o pokojach\n                    pobierane są z popularnych portali z ogłoszeniami."],
+      "1": ["1) Podaj lokalizację w Warszawie, do której chciałbyś dojechać."],
+      "2": ["2) Wybierz środek transportu. Umożliwiamy 3 opcje: samochód, rower\n            oraz pieszo."],
+      "3": ["3) Określ maksymalny czas dojazdu (w minutach)."],
+      "4": ["4) Podaj zakres cenowy."],
+      "5": ["5) Sprecyzuj datę ogłoszeń (sugerujemy ostatnie 2-3 dni, ze względu\n            na aktualność)"],
+      "6": ["6) Następnie kliknij w poniższy przycisk :)"],
+      "7": ["7) Po przejściu do panelu Pokoje/Mieszkania, dostaniesz następujący\n            wynik: zielony marker oznacza wskazaną przez Ciebie lokalizację,\n            niebieski to oferty spełniające Twoje oczekiwania."],
+      "8": ["8) Po kliknięciu na marker otrzymasz szczegółowe informacje\n            odnośnie oferty: adres, link do ogłoszenia, cenę oraz wielkość."],
+      "suggestions": ["Jeżeli uważasz, że aplikację można poprawić, albo masz\n                jakiekolwiek pytania bądź sugestie, proszę zostaw wiadomość w\n                poniższym panelu."]
+    },
+    "table": {
+      "1": ["Tabela przedstawi dane spełniające wymagania sprecyzowane w lewym\n      panelu, po kliknięciu '"],
+      "2": ["Pełne dane dostępne są tutaj."]
+    }
+  },
+  "header": {
+    "title": ["Pokoje a Czas Dojazdu"],
+    "offers": ["ofert"],
+    "project": {
+      "from": ["Projekt"],
+      "message": ["Kliknij by przejść"]
+    },
+    "data": {
+      "from": ["Dane"],
+      "message": ["Aktualne na dzień"]
+    },
+    "profile": ["Kliknij by przejść na profil"],
+    "team": {
+      "from": ["Zespół na GitHubie"],
+      "message": ["Kliknij by przejść"]
+    }
+  },
+  "sidebar": {
+    "about": {
+      "item": ["O projekcie"],
+      "subitem": {
+        "goal": ["Cel"],
+        "authors": ["Ludzie"],
+        "data": ["Dane"]
+      }
+    },
+    "rooms": ["Pokoje"],
+    "apartments": ["Mieszkania"],
+    "analysis": ["Analizy"],
+    "location": ["Lokalizacja: "],
+    "commuting": ["Maksymalny czas dojazdu: "],
+    "transport": {
+      "label": ["Środek transportu: "],
+      "driving": ["Samochód"],
+      "bicycling": ["Rower"],
+      "walking": ["Pieszo"]
+    },
+    "price": ["Zakres cenowy: "],
+    "date": ["Oferty z dni"],
+    "button": ["Pokaż lokalizacje"],
+    "content_lok": ["Twoja lokalizacja"]
+  }
+}
