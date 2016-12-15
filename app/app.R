@@ -8,6 +8,8 @@ library(stringi)
 library(RSQLite)
 library(jsonlite)
 
+source("functions.R")
+
 conn <- dbConnect(dbDriver("SQLite"), "../dane/czas_dojazdu.db")
 dane <- dbGetQuery(
   conn,
@@ -100,18 +102,14 @@ server <- function(input, output, session) {
     )
   })
   
-  output$content <- DT::renderDataTable({
+  output$content <- renderDataTable({
     if (v$doPlot) {
       dane3() %>%
-        select(dzielnica, adres, cena, data_dodania, link) %>%
-        datatable()
+        prepDT()
     } else {
-      datatable(
-        data.frame(
-          dzielnica = "", adres = "", cena = "", czas = "", data_dodania = ""
-        )
-      )
-    }}, escape = FALSE)
+      dane[FALSE, ] %>%
+        prepDT()
+    }})
   
   output$mymap <- renderLeaflet({
     content_lok <- paste(sep = "<br/>",
