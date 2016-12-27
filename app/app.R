@@ -69,7 +69,7 @@ server <- function(input, output, session) {
                                EN = "en") %>% loadLang())
   
   shiny::observe({
-    shiny::updateSelectInput(session, "language", lang()$language)
+    shiny::updateSelectInput(session, "language", lang()$sidebar$language)
     shinydashboard::updateTabItems(session, "items", "cel")
   })
   
