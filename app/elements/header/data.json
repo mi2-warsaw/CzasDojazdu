@@ -1,0 +1,7 @@
+{
+  "from": ["quote(lang$header$data$from)"],
+  "message": ["quote(lang$header$data$message)"],
+  "icon": ["shiny::icon('calendar')"],
+  "time": ["quote(data$data_dodania %>% max() %>% as.character())"],
+  "href": ["NULL"]
+}

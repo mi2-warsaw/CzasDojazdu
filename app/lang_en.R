@@ -51,7 +51,7 @@ lang <- list(
     )
   ),
   header = list(
-    title = "Commuting Time of rooms to let",
+    title = "Commuting Time",
     offers = "offers",
     project = list(
       from = "Project",
@@ -68,6 +68,7 @@ lang <- list(
     )
   ),
   sidebar = list(
+    language = "Choose language:",
     about = list(
       item = "About the project",
       subitem = list(
@@ -89,6 +90,8 @@ lang <- list(
     ),
     price = "Price range: ",
     date = "Offers on the following days",
+    lang = "en",
+    separator = " to ",
     button = "Show locations",
     content_lok = "Your location"
   )

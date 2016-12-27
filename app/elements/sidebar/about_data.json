@@ -1,0 +1,8 @@
+{
+  "text": ["quote(lang$sidebar$about$subitem$data)"],
+  "tabName": ["dane"],
+  "href": ["NULL"],
+  "newtab": ["TRUE"],
+  "icon": ["shiny::icon('database')"],
+  "selected": ["NULL"]
+}

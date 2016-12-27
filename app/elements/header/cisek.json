@@ -1,0 +1,7 @@
+{
+  "from": ["Michał Cisek"],
+  "message": ["quote(lang$header$profile)"],
+  "icon": ["shiny::icon('user')"],
+  "time": ["NULL"],
+  "href": ["https://github.com/michalcisek"]
+}

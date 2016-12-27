@@ -10,8 +10,8 @@ library(jsonlite)
 
 source("functions.R")
 
-conn <- dbConnect(dbDriver("SQLite"), "../dane/czas_dojazdu.db")
-dane <- dbGetQuery(
+conn <- RSQLite::dbConnect(dbDriver("SQLite"), "../dane/czas_dojazdu.db")
+dane <- RSQLite::dbGetQuery(
   conn,
   "SELECT cena, adres, dzielnica, content, lon, lat, data_dodania, link
   FROM gumtree_warszawa_pokoje_02
@@ -31,50 +31,107 @@ dane <- dbGetQuery(
   top_n(1, -cena) %>%
   top_n(1, link) %>%
   ungroup()
+RSQLite::dbDisconnect(conn)
 
-dbDisconnect(conn)
-
-lang <- "lang/pl.json" %>%
-  fromJSON() %>%
-  rapply(gsub, pattern = "\n[[:space:]]*", replacement = " ", how = "list")
+lang <- loadLang("pl")
 
 subfolder <- "elements/"
-list.files(subfolder) %>%
+list.files(path = subfolder, pattern = "*.R") %>%
   sapply(function(x) {
     x %>%
       paste0(subfolder, .) %>%
       source()
   })
 
-ui <- dashboardPage(
-  skin = "black",
-  dashboardHeader,
-  dashboardSidebar,
-  dashboardBody
+ui <- shinydashboard::dashboardPage(
+  header = shinydashboard::dashboardHeader(
+    title = uiOutput("title"),
+    titleWidth = 300,
+    shinydashboard::dropdownMenuOutput("headerMessages"),
+    shinydashboard::dropdownMenuOutput("headerNotifications")
+  ),
+  sidebar = shinydashboard::dashboardSidebar(
+    dbSidebarLanguage("language"),
+    shinydashboard::sidebarMenu(
+      id = "items",
+      shinydashboard::menuItemOutput("sidebar")
+    ),
+    shiny::uiOutput("widgets")
+  ),
+  body = shiny::uiOutput("body")
 )
 
 server <- function(input, output, session) {
   
-  v <- reactiveValues(doPlot = FALSE)
+  lang <- shiny::eventReactive(input$language,
+                        switch(input$language,
+                               PL = "pl",
+                               EN = "en") %>% loadLang())
   
-  observeEvent(input$go, {
+  shiny::observe({
+    shiny::updateSelectInput(session, "language", lang()$language)
+    shinydashboard::updateTabItems(session, "items", "cel")
+  })
+  
+  shiny::observeEvent(input$language, {
+    output$title <- shiny::renderText(
+      lang()$header$title
+    )
+    
+    output$headerMessages <- shinydashboard::renderMenu({
+      dbHeader(
+        lang = lang(),
+        data = dane,
+        type = "messages",
+        badgeStatus = "success",
+        name = "offers"
+      )
+    })
+    
+    output$headerNotifications <- shinydashboard::renderMenu({
+      dbHeader(
+        lang = lang(),
+        data = dane,
+        type = "notifications",
+        badgeStatus = "success",
+        name = c("project", "data", "brodecka", "cisek", "kosinski",
+                 "mikolajczyk", "slomczynski", "team")
+      )
+    })
+    
+    output$sidebar <- shinydashboard::renderMenu({
+      dbSidebar(lang())
+    })
+    
+    output$widgets <- shiny::renderUI(
+      dbSidebarWidgets(lang())
+    )
+    
+    output$body <- shiny::renderUI(
+      dbBody(lang())
+    )
+  })
+  
+  v <- shiny::reactiveValues(doPlot = FALSE)
+  
+  shiny::observeEvent(input$go, {
     v$doPlot <- input$go
   })
   
-  dane2 <- reactive({
+  dane2 <- shiny::reactive(
     dane %>% 
       filter(between(cena, input$cena[1], input$cena[2]),
              between(data_dodania, input$data[1], input$data[2]))
-  })
+  )
   
-  dane3 <- reactive({
+  dane3 <- shiny::reactive({
     # typ <- switch(input$srodek_trans,
     #               lang$sidebar$transport$driving = "driving",
     #               lang$sidebar$transport$bicycling = "bicycling",
     #               lang$sidebar$transport$walking = "walking")
-    if (input$srodek_trans == lang$sidebar$transport$driving) {
+    if (input$srodek_trans == lang()$sidebar$transport$driving) {
       typ <- "driving"
-    } else if (input$srodek_trans == lang$sidebar$transport$bicycling) {
+    } else if (input$srodek_trans == lang()$sidebar$transport$bicycling) {
       typ <- "bicycling"
     } else {
       typ <- "walking"
@@ -83,16 +140,15 @@ server <- function(input, output, session) {
     #               Samochód = "driving",
     #               Rower = "bicycling",
     #               Pieszo = "walking")
-    czas <- mapdist(paste("Warszawa", dane2()$adres), 
+    czas <- ggmap::mapdist(paste("Warszawa", dane2()$adres), 
                     paste("Warszawa", input$lokalizacja), 
                     typ,
-                    "simple") %>%
-      unique()
+                    "simple") %>% unique()
     dane2() %>%
       filter(czas$minutes %>% as.integer() <= input$czas_doj)
   })
   
-  output$dane_debug <- renderText({
+  output$dane_debug <- shiny::renderText(
     HTML(
       paste0(
         "<font color=\"#FFA500\"><b>",
@@ -100,30 +156,28 @@ server <- function(input, output, session) {
         "</b></font>"
       )
     )
-  })
+  )
   
-  output$content <- renderDataTable({
+  output$content <- DT::renderDataTable({
     if (v$doPlot) {
-      dane3() %>%
-        prepDT()
+      prepDT(lang = lang(), data = dane3())
     } else {
-      dane[FALSE, ] %>%
-        prepDT()
+      prepDT(lang = lang(), data = dane[FALSE, ])
     }})
   
-  output$mymap <- renderLeaflet({
+  output$mymap <- leaflet::renderLeaflet({
     content_lok <- paste(sep = "<br/>",
-                         lang$sidebar$content_lok,
+                         lang()$sidebar$content_lok,
                          input$lokalizacja)
-    geocode <- paste("Warszawa", input$lokalizacja) %>% geocode()
+    geocode <- paste("Warszawa", input$lokalizacja) %>% ggmap::geocode()
     
     blue <- "blue.png"
     green <- "green.png"
     
     if (v$doPlot == FALSE) {
-      leaflet() %>%
-        addTiles() %>%
-        addMarkers(
+      leaflet::leaflet() %>%
+        leaflet::addTiles() %>%
+        leaflet::addMarkers(
           geocode$lon,
           geocode$lat,
           icon = list(iconUrl = green,
@@ -131,22 +185,22 @@ server <- function(input, output, session) {
           popup = content_lok
         )
     } else {
-      leaflet() %>%
-        addTiles() %>%
-        addMarkers(
+      leaflet::leaflet() %>%
+        leaflet::addTiles() %>%
+        leaflet::addMarkers(
           geocode$lon,
           geocode$lat,
           icon = list(iconUrl = green,
                       iconSize = 40),
           popup = content_lok
         ) %>%
-        addMarkers(
+        leaflet::addMarkers(
           dane3()$lon,
           dane3()$lat,
           icon = list(iconUrl = blue, iconSize = 40),
           popup = dane3()$content
         ) %>%
-        addMarkers(
+        leaflet::addMarkers(
           geocode$lon,
           geocode$lat,
           icon = list(iconUrl = green, iconSize = 40),
@@ -156,4 +210,4 @@ server <- function(input, output, session) {
   })
 }
 
-shinyApp(ui, server)
+shiny::shinyApp(ui, server)

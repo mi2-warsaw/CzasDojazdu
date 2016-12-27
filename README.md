@@ -10,7 +10,7 @@ Dane udostępniane są [tutaj](http://mi2.mini.pw.edu.pl:3838/CzasDojazdu/dane/)
 
 ## Aplikacja
 
-Kody dostępne są w folderze  `pl/`. Aplikacja jest udostępniana [tutaj](http://mi2.mini.pw.edu.pl:3838/CzasDojazdu/pl/).
+Kody dostępne są w folderze `app/`. Aplikacja jest udostępniana [tutaj](http://mi2.mini.pw.edu.pl:3838/CzasDojazdu/app/).
 
 ## Dockery 
 

@@ -1,0 +1,7 @@
+{
+  "from": ["Krzysztof Słomczyński"],
+  "message": ["quote(lang$header$profile)"],
+  "icon": ["shiny::icon('user')"],
+  "time": ["NULL"],
+  "href": ["https://github.com/krzyslom"]
+}

@@ -1,0 +1,10 @@
+{
+  "text": ["quote(lang$sidebar$about$item)"],
+  "icon": ["shiny::icon('info')"],
+  "badgeLabel": ["NULL"],
+  "badgeColor": ["green"],
+  "tabName": ["info"],
+  "href": ["NULL"],
+  "newtab": ["TRUE"],
+  "selected": ["NULL"]
+}

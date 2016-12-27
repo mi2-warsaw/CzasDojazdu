@@ -1,0 +1,7 @@
+{
+  "from": ["quote(nrow(data))"],
+  "message": ["quote(lang$header$offers)"],
+  "icon": ["shiny::icon('photo')"],
+  "time": ["NULL"],
+  "href": ["NULL"]
+}

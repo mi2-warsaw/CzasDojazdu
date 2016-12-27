@@ -1,0 +1,8 @@
+{
+  "text": ["quote(lang$sidebar$about$subitem$goal)"],
+  "tabName": ["cel"],
+  "href": ["NULL"],
+  "newtab": ["TRUE"],
+  "icon": ["shiny::icon('trophy')"],
+  "selected": ["NULL"]
+}

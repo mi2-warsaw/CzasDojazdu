@@ -1,0 +1,8 @@
+{
+  "text": ["quote(lang$sidebar$about$subitem$authors)"],
+  "tabName": ["ludzie"],
+  "href": ["NULL"],
+  "newtab": ["TRUE"],
+  "icon": ["shiny::icon('users')"],
+  "selected": ["NULL"]
+}

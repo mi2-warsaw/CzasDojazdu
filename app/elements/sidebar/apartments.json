@@ -1,0 +1,10 @@
+{
+  "text": ["quote(lang$sidebar$apartments)"],
+  "icon": ["shiny::icon('hotel')"],
+  "badgeLabel": ["TODO"],
+  "badgeColor": ["green"],
+  "tabName": ["mieszkania"],
+  "href": ["NULL"],
+  "newtab": ["TRUE"],
+  "selected": ["NULL"]
+}

@@ -1,0 +1,7 @@
+{
+  "from": ["quote(lang$header$team$from)"],
+  "message": ["quote(lang$header$team$message)"],
+  "icon": ["shiny::icon('group')"],
+  "time": ["NULL"],
+  "href": ["https://github.com/orgs/mi2-warsaw/teams/wczasowicze"]
+}

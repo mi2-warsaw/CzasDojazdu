@@ -1,0 +1,10 @@
+{
+  "text": ["quote(lang$sidebar$analysis)"],
+  "icon": ["shiny::icon('area-chart')"],
+  "badgeLabel": ["prototype"],
+  "badgeColor": ["maroon"],
+  "tabName": ["analizy"],
+  "href": ["NULL"],
+  "newtab": ["TRUE"],
+  "selected": ["NULL"]
+}

@@ -1,0 +1,7 @@
+{
+  "from": ["quote(lang$header$project$from)"],
+  "message": ["quote(lang$header$project$message)"],
+  "icon": ["shiny::icon('git')"],
+  "time": ["NULL"],
+  "href": ["https://github.com/mi2-warsaw/CzasDojazdu"]
+}

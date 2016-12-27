@@ -1,0 +1,10 @@
+{
+  "text": ["quote(lang$sidebar$rooms)"],
+  "icon": ["shiny::icon('graduation-cap')"],
+  "badgeLabel": ["new"],
+  "badgeColor": ["yellow"],
+  "tabName": ["pokoje"],
+  "href": ["NULL"],
+  "newtab": ["TRUE"],
+  "selected": ["NULL"]
+}

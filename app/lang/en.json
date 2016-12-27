@@ -30,7 +30,7 @@
     }
   },
   "header": {
-    "title": ["Commuting Time of rooms to let"],
+    "title": ["Commuting Time"],
     "offers": ["offers"],
     "project": {
       "from": ["Project"],
@@ -47,6 +47,7 @@
     }
   },
   "sidebar": {
+    "language": ["Choose language:"],
     "about": {
       "item": ["About the project"],
       "subitem": {
@@ -68,6 +69,8 @@
     },
     "price": ["Price range: "],
     "date": ["Offers on the following days"],
+    "lang": ["en"],
+    "separator": [" to "],
     "button": ["Show locations"],
     "content_lok": ["Your location"]
   }

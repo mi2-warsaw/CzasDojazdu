@@ -49,7 +49,7 @@ lang <- list(
     )
   ),
   header = list(
-    title = "Pokoje a Czas Dojazdu",
+    title = "Czas Dojazdu",
     offers = "ofert",
     project = list(
       from = "Projekt",
@@ -66,6 +66,7 @@ lang <- list(
     )
   ),
   sidebar = list(
+    language = "Wybierz język:",
     about = list(
       item = "O projekcie",
       subitem = list(
@@ -87,6 +88,8 @@ lang <- list(
     ),
     price = "Zakres cenowy: ",
     date = "Oferty z dni",
+    lang = "pl",
+    separator = " do ",
     button = "Pokaż lokalizacje",
     content_lok = "Twoja lokalizacja"
   )

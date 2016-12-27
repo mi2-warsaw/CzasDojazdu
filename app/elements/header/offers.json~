@@ -1,0 +1,7 @@
+{
+  "from": ["nrow(dane)"],
+  "message": ["lang$header$offers"],
+  "icon": ["photo"],
+  "time": ["NULL"],
+  "href": ["NULL"]
+}
