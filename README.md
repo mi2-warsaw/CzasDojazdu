@@ -19,8 +19,9 @@ dostępne są w pliku Dockerfile. [Status builda Dockera pobierającego dane](ht
 
 Aplikacja działa w obrazie [Docker'a Shiny Server](https://hub.docker.com/r/krzyslom/mi2-server/).
 
-O motywacji używania kontenerów Docker'a można przeczytać [w tym wpisie na blogu](http://r-addict.com/2016/05/13/Docker-Motivation.html).
-
+O motywacji używania kontenerów Docker'a można przeczytać w tych wpisach
+- [R 3.3.0 is another motivation for Docker](http://r-addict.com/2016/05/13/Docker-Motivation.html).
+- [Rocker - explanation and motivation for Docker containers usage in applications development](http://r-addict.com/2016/10/03/Rocker-Presentation-eRka10.html)
 
 ### Autorzy
 
