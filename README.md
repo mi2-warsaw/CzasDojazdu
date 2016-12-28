@@ -1,6 +1,6 @@
 # CzasDojazdu
 
-[http://mi2.mini.pw.edu.pl:3838/CzasDojazdu/](http://mi2.mini.pw.edu.pl:3838/CzasDojazdu/)
+[http://mi2.mini.pw.edu.pl:3838/CzasDojazdu/app/](http://mi2.mini.pw.edu.pl:3838/CzasDojazdu/app/)
 
 
 ## Dane
